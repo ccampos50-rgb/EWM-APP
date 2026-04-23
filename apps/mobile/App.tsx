@@ -6,6 +6,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { AuthProvider, useAuth } from "./lib/auth";
 import { ClockOutScreen } from "./screens/ClockOutScreen";
 import { HomeScreen } from "./screens/HomeScreen";
+import { IncidentReportScreen } from "./screens/IncidentReportScreen";
 import { LoginScreen } from "./screens/LoginScreen";
 import { SiteDetailScreen } from "./screens/SiteDetailScreen";
 import { SitesScreen } from "./screens/SitesScreen";
@@ -62,6 +63,11 @@ function RootNavigator() {
         name="ClockOut"
         component={ClockOutScreen}
         options={{ title: "Clock out" }}
+      />
+      <Stack.Screen
+        name="IncidentReport"
+        component={IncidentReportScreen}
+        options={{ title: "Report incident" }}
       />
     </Stack.Navigator>
   );

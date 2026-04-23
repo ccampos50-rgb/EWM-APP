@@ -79,7 +79,7 @@ export function SiteDetailScreen({ route, navigation }: Props) {
       }
 
       await clockIn(shift.id, position.coords.latitude, position.coords.longitude);
-      navigation.replace("TaskList", { shiftId: shift.id, siteName: site.name });
+      navigation.replace("TaskList", { shiftId: shift.id, siteName: site.name, siteId: site.id });
     } catch (e) {
       Alert.alert("Clock-in failed", e instanceof Error ? e.message : "Unknown error.");
     } finally {
@@ -159,7 +159,11 @@ export function SiteDetailScreen({ route, navigation }: Props) {
           <TouchableOpacity
             style={styles.primaryButton}
             onPress={() =>
-              navigation.navigate("TaskList", { shiftId: shift.id, siteName: site.name })
+              navigation.navigate("TaskList", {
+                shiftId: shift.id,
+                siteName: site.name,
+                siteId: site.id,
+              })
             }
           >
             <Text style={styles.primaryButtonText}>View tasks</Text>

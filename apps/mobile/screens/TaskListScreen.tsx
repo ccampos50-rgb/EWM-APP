@@ -24,7 +24,7 @@ const STATUS_COLORS: Record<TaskRow["status"], string> = {
 };
 
 export function TaskListScreen({ route, navigation }: Props) {
-  const { shiftId, siteName } = route.params;
+  const { shiftId, siteName, siteId } = route.params;
   const [tasks, setTasks] = useState<TaskRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -98,12 +98,20 @@ export function TaskListScreen({ route, navigation }: Props) {
         />
       )}
 
-      <TouchableOpacity
-        style={styles.clockOutButton}
-        onPress={() => navigation.navigate("ClockOut", { shiftId })}
-      >
-        <Text style={styles.clockOutText}>Clock out</Text>
-      </TouchableOpacity>
+      <View style={styles.footerRow}>
+        <TouchableOpacity
+          style={styles.incidentButton}
+          onPress={() => navigation.navigate("IncidentReport", { siteId, siteName })}
+        >
+          <Text style={styles.incidentButtonText}>Report incident</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.clockOutButton}
+          onPress={() => navigation.navigate("ClockOut", { shiftId })}
+        >
+          <Text style={styles.clockOutText}>Clock out</Text>
+        </TouchableOpacity>
+      </View>
     </SafeAreaView>
   );
 }
@@ -148,8 +156,23 @@ const styles = StyleSheet.create({
   errorText: { color: "#DC2626", fontSize: 14, textAlign: "center" },
   emptyTitle: { fontSize: 16, fontWeight: "600", color: "#0F172A" },
   emptyText: { fontSize: 13, color: "#64748B", marginTop: 8, textAlign: "center" },
+  footerRow: {
+    flexDirection: "row",
+    gap: 10,
+    padding: 16,
+  },
+  incidentButton: {
+    flex: 1,
+    backgroundColor: "#fff",
+    borderWidth: 1,
+    borderColor: "#CBD5E1",
+    paddingVertical: 12,
+    borderRadius: 8,
+    alignItems: "center",
+  },
+  incidentButtonText: { color: "#475569", fontSize: 14, fontWeight: "500" },
   clockOutButton: {
-    margin: 16,
+    flex: 1,
     backgroundColor: "#475569",
     paddingVertical: 12,
     borderRadius: 8,

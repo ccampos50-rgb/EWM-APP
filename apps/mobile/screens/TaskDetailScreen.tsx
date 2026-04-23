@@ -19,6 +19,7 @@ import {
   startTask,
   type TaskRow,
 } from "../lib/db";
+import { captureTaskPhoto } from "../lib/photos";
 import type { RootStackParamList } from "../navigation/types";
 
 type Props = NativeStackScreenProps<RootStackParamList, "TaskDetail">;
@@ -74,7 +75,12 @@ export function TaskDetailScreen({ route, navigation }: Props) {
       if (scanGoal === "start") {
         await startTask(task.id, resolved.entity_ref);
       } else {
-        await completeTask(task.id, { scannedCode: resolved.entity_ref, notes });
+        const photoUrl = await maybeCapturePhoto(task);
+        await completeTask(task.id, {
+          scannedCode: resolved.entity_ref,
+          notes,
+          photoUrl: photoUrl ?? undefined,
+        });
       }
       await load();
     } catch (e) {
@@ -82,6 +88,15 @@ export function TaskDetailScreen({ route, navigation }: Props) {
     } finally {
       setBusy(false);
     }
+  };
+
+  const maybeCapturePhoto = async (t: TaskRow): Promise<string | null> => {
+    if (!t.template?.requires_photo) return null;
+    const photo = await captureTaskPhoto();
+    if (!photo) {
+      throw new Error("Photo proof is required for this task.");
+    }
+    return photo.publicUrl;
   };
 
   const handleStartWithoutScan = async () => {
@@ -101,7 +116,8 @@ export function TaskDetailScreen({ route, navigation }: Props) {
     if (!task) return;
     setBusy(true);
     try {
-      await completeTask(task.id, { notes });
+      const photoUrl = await maybeCapturePhoto(task);
+      await completeTask(task.id, { notes, photoUrl: photoUrl ?? undefined });
       navigation.goBack();
     } catch (e) {
       Alert.alert("Error", e instanceof Error ? e.message : "Failed to complete task.");
