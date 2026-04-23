@@ -64,12 +64,21 @@ pnpm --filter admin dev                  # Next.js on http://localhost:3000
 pnpm --filter mobile start               # Expo dev server
 ```
 
-### Not yet done (Week 1 tasks)
-- Install Supabase CLI (`brew install supabase/tap/supabase`)
-- Run `supabase start` to spin up local Postgres + apply migrations
-- Wire Next.js admin to Supabase (login, middleware, RBAC)
-- Wire Expo mobile to Supabase (login, site picker, home screen stub)
-- Replace placeholder `types.ts` with generated types (`supabase gen types typescript --local`)
-- Initialize git at the monorepo root and commit
+### Week 1 status (scaffold + auth wired)
 
-See [ROADMAP.md](ROADMAP.md) for the week-by-week plan.
+Done:
+- ✅ Supabase CLI installed as workspace dev dep (`supabase@2.95.0`)
+- ✅ Admin (Next.js 16): Supabase client + server + proxy (middleware renamed in Next 16), login page with server action, dashboard stub with sign-out
+- ✅ Mobile (Expo): Supabase client with AsyncStorage, AuthProvider context, LoginScreen, HomeScreen, auth-aware App.tsx
+- ✅ Both apps typecheck clean
+- ✅ Git initialized on `main`, baseline committed
+
+Blocked on you (see [SETUP.md](SETUP.md)):
+- 🟡 Create a Supabase project (cloud) OR install Docker Desktop (for local)
+- 🟡 Run migration + seed against it
+- 🟡 Fill in `.env.local` / `.env` files
+- 🟡 Create your first admin user
+
+Once those are done you can `pnpm --filter admin dev` and log in.
+
+See [ROADMAP.md](ROADMAP.md) for Week 2+ plan and [SETUP.md](SETUP.md) for exact setup steps.
