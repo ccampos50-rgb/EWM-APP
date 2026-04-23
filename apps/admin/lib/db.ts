@@ -24,11 +24,13 @@ export type AdminShiftRow = {
 export type AdminTaskRow = {
   id: string;
   shift_id: string;
+  site_id: string;
   template_code: string;
   target_ref: string | null;
   status: "assigned" | "in_progress" | "done" | "blocked" | "skipped";
   started_at: string | null;
   completed_at: string | null;
+  duration_seconds: number | null;
   template: { label: string; expected_minutes: number } | null;
 };
 
@@ -79,7 +81,7 @@ export async function fetchShiftTasks(shiftId: string): Promise<AdminTaskRow[]> 
   const { data, error } = await supabase
     .from("tasks")
     .select(
-      "id, shift_id, template_code, target_ref, status, started_at, completed_at, template:task_templates(label, expected_minutes)",
+      "id, shift_id, site_id, template_code, target_ref, status, started_at, completed_at, duration_seconds, template:task_templates(label, expected_minutes)",
     )
     .eq("shift_id", shiftId)
     .order("created_at");

@@ -30,6 +30,7 @@ export type TaskRow = {
   started_at: string | null;
   completed_at: string | null;
   notes: string | null;
+  photo_url: string | null;
   template: {
     label: string;
     expected_minutes: number;
@@ -122,7 +123,7 @@ export async function fetchShiftTasks(shiftId: string): Promise<TaskRow[]> {
   const { data, error } = await supabase
     .from("tasks")
     .select(
-      "id, shift_id, site_id, template_code, target_ref, status, started_at, completed_at, notes, template:task_templates(label, expected_minutes, requires_scan, requires_photo, billing_unit)",
+      "id, shift_id, site_id, template_code, target_ref, status, started_at, completed_at, notes, photo_url, template:task_templates(label, expected_minutes, requires_scan, requires_photo, billing_unit)",
     )
     .eq("shift_id", shiftId)
     .order("created_at");
@@ -135,7 +136,7 @@ export async function fetchTask(taskId: string): Promise<TaskRow | null> {
   const { data, error } = await supabase
     .from("tasks")
     .select(
-      "id, shift_id, site_id, template_code, target_ref, status, started_at, completed_at, notes, template:task_templates(label, expected_minutes, requires_scan, requires_photo, billing_unit)",
+      "id, shift_id, site_id, template_code, target_ref, status, started_at, completed_at, notes, photo_url, template:task_templates(label, expected_minutes, requires_scan, requires_photo, billing_unit)",
     )
     .eq("id", taskId)
     .maybeSingle();
@@ -161,7 +162,7 @@ export async function startTask(taskId: string, scannedCode?: string): Promise<v
 
 export async function completeTask(
   taskId: string,
-  opts: { notes?: string; scannedCode?: string } = {},
+  opts: { notes?: string; scannedCode?: string; photoUrl?: string } = {},
 ): Promise<void> {
   const now = new Date().toISOString();
   const { error } = await supabase
@@ -170,6 +171,7 @@ export async function completeTask(
       status: "done",
       completed_at: now,
       ...(opts.notes ? { notes: opts.notes } : {}),
+      ...(opts.photoUrl ? { photo_url: opts.photoUrl } : {}),
     })
     .eq("id", taskId);
   if (error) throw error;
@@ -177,7 +179,29 @@ export async function completeTask(
   await logTaskEvent(taskId, "completed", {
     ...(opts.scannedCode ? { code: opts.scannedCode } : {}),
     ...(opts.notes ? { notes: opts.notes } : {}),
+    ...(opts.photoUrl ? { photo_url: opts.photoUrl } : {}),
   });
+}
+
+export async function createIncident(opts: {
+  siteId: string;
+  category: string;
+  severity: "low" | "medium" | "high";
+  description?: string;
+  photoUrl?: string;
+}): Promise<void> {
+  const { data: user } = await supabase.auth.getUser();
+  if (!user.user) throw new Error("Not signed in.");
+
+  const { error } = await supabase.from("incidents").insert({
+    site_id: opts.siteId,
+    reporter_id: user.user.id,
+    category: opts.category,
+    severity: opts.severity,
+    description: opts.description ?? null,
+    photo_url: opts.photoUrl ?? null,
+  });
+  if (error) throw error;
 }
 
 export async function blockTask(taskId: string, reason: string): Promise<void> {
