@@ -1,9 +1,12 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { StatusBar } from "expo-status-bar";
+import { useEffect } from "react";
 import { ActivityIndicator, StyleSheet, View } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { AuthProvider, useAuth } from "./lib/auth";
+import "./lib/i18n";
+import { registerForPushNotifications } from "./lib/push";
 import { ClockOutScreen } from "./screens/ClockOutScreen";
 import { HomeScreen } from "./screens/HomeScreen";
 import { IncidentReportScreen } from "./screens/IncidentReportScreen";
@@ -18,6 +21,12 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function RootNavigator() {
   const { session, loading } = useAuth();
+
+  useEffect(() => {
+    if (session) {
+      registerForPushNotifications().catch((e) => console.warn("[push]", e));
+    }
+  }, [session]);
 
   if (loading) {
     return (
