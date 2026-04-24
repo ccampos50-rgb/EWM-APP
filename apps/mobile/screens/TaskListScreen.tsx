@@ -1,5 +1,6 @@
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useCallback, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   ActivityIndicator,
   FlatList,
@@ -24,6 +25,7 @@ const STATUS_COLORS: Record<TaskRow["status"], string> = {
 };
 
 export function TaskListScreen({ route, navigation }: Props) {
+  const { t } = useTranslation();
   const { shiftId, siteName, siteId } = route.params;
   const [tasks, setTasks] = useState<TaskRow[]>([]);
   const [loading, setLoading] = useState(true);
@@ -34,11 +36,11 @@ export function TaskListScreen({ route, navigation }: Props) {
     try {
       setTasks(await fetchShiftTasks(shiftId));
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Failed to load tasks.");
+      setError(e instanceof Error ? e.message : t("taskList.loadFailed"));
     } finally {
       setLoading(false);
     }
-  }, [shiftId]);
+  }, [shiftId, t]);
 
   useEffect(() => {
     const unsub = navigation.addListener("focus", load);
@@ -53,7 +55,7 @@ export function TaskListScreen({ route, navigation }: Props) {
       <View style={styles.header}>
         <Text style={styles.siteName}>{siteName}</Text>
         <Text style={styles.summary}>
-          {tasks.length} tasks · {openCount} open
+          {t("taskList.count", { total: tasks.length, open: openCount })}
         </Text>
       </View>
 
@@ -67,8 +69,8 @@ export function TaskListScreen({ route, navigation }: Props) {
         </View>
       ) : tasks.length === 0 ? (
         <View style={styles.center}>
-          <Text style={styles.emptyTitle}>No tasks assigned yet</Text>
-          <Text style={styles.emptyText}>Your site manager will assign tasks shortly.</Text>
+          <Text style={styles.emptyTitle}>{t("taskList.emptyTitle")}</Text>
+          <Text style={styles.emptyText}>{t("taskList.emptyText")}</Text>
         </View>
       ) : (
         <FlatList
@@ -89,7 +91,9 @@ export function TaskListScreen({ route, navigation }: Props) {
                   <Text style={styles.statusPillText}>{item.status.replace("_", " ")}</Text>
                 </View>
               </View>
-              {item.target_ref && <Text style={styles.target}>Target: {item.target_ref}</Text>}
+              {item.target_ref && (
+                <Text style={styles.target}>{t("taskDetail.target", { ref: item.target_ref })}</Text>
+              )}
               {item.template?.expected_minutes != null && (
                 <Text style={styles.meta}>~{item.template.expected_minutes} min</Text>
               )}
@@ -103,13 +107,13 @@ export function TaskListScreen({ route, navigation }: Props) {
           style={styles.incidentButton}
           onPress={() => navigation.navigate("IncidentReport", { siteId, siteName })}
         >
-          <Text style={styles.incidentButtonText}>Report incident</Text>
+          <Text style={styles.incidentButtonText}>{t("taskList.reportIncident")}</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.clockOutButton}
           onPress={() => navigation.navigate("ClockOut", { shiftId })}
         >
-          <Text style={styles.clockOutText}>Clock out</Text>
+          <Text style={styles.clockOutText}>{t("taskList.clockOut")}</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>

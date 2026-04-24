@@ -1,5 +1,6 @@
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   ActivityIndicator,
   Alert,
@@ -18,22 +19,23 @@ import type { RootStackParamList } from "../navigation/types";
 
 type Props = NativeStackScreenProps<RootStackParamList, "IncidentReport">;
 
-const CATEGORIES = [
-  { key: "safety", label: "Safety issue" },
-  { key: "equipment", label: "Equipment problem" },
-  { key: "supply", label: "Supply shortage" },
-  { key: "client_complaint", label: "Client complaint" },
-  { key: "property_damage", label: "Property damage" },
-  { key: "other", label: "Other" },
-];
+const CATEGORY_KEYS = [
+  "safety",
+  "equipment",
+  "supply",
+  "client_complaint",
+  "property_damage",
+  "other",
+] as const;
 
-const SEVERITIES: Array<{ key: "low" | "medium" | "high"; label: string; color: string }> = [
-  { key: "low", label: "Low", color: "#64748B" },
-  { key: "medium", label: "Medium", color: "#D97706" },
-  { key: "high", label: "High", color: "#DC2626" },
+const SEVERITY_KEYS: Array<{ key: "low" | "medium" | "high"; color: string }> = [
+  { key: "low", color: "#64748B" },
+  { key: "medium", color: "#D97706" },
+  { key: "high", color: "#DC2626" },
 ];
 
 export function IncidentReportScreen({ route, navigation }: Props) {
+  const { t } = useTranslation();
   const { siteId, siteName } = route.params;
   const [category, setCategory] = useState<string | null>(null);
   const [severity, setSeverity] = useState<"low" | "medium" | "high">("low");
@@ -48,7 +50,7 @@ export function IncidentReportScreen({ route, navigation }: Props) {
       const result = await captureTaskPhoto();
       if (result) setPhotoUrl(result.publicUrl);
     } catch (e) {
-      Alert.alert("Photo error", e instanceof Error ? e.message : "Capture failed.");
+      Alert.alert(t("incident.photoError"), e instanceof Error ? e.message : "Capture failed.");
     } finally {
       setCapturingPhoto(false);
     }
@@ -56,7 +58,7 @@ export function IncidentReportScreen({ route, navigation }: Props) {
 
   const submit = async () => {
     if (!category) {
-      Alert.alert("Category required", "Pick a category for this incident.");
+      Alert.alert(t("incident.categoryLabel"), t("incident.categoryRequired"));
       return;
     }
     setSubmitting(true);
@@ -68,11 +70,11 @@ export function IncidentReportScreen({ route, navigation }: Props) {
         description: description.trim() || undefined,
         photoUrl: photoUrl ?? undefined,
       });
-      Alert.alert("Incident reported", "Your site manager has been notified.", [
+      Alert.alert(t("incident.submitted"), t("incident.submittedBody"), [
         { text: "OK", onPress: () => navigation.goBack() },
       ]);
     } catch (e) {
-      Alert.alert("Error", e instanceof Error ? e.message : "Failed to submit.");
+      Alert.alert(t("common.error"), e instanceof Error ? e.message : "Failed to submit.");
     } finally {
       setSubmitting(false);
     }
@@ -81,32 +83,32 @@ export function IncidentReportScreen({ route, navigation }: Props) {
   return (
     <SafeAreaView style={styles.root}>
       <ScrollView contentContainerStyle={styles.content}>
-        <Text style={styles.heading}>Report an incident</Text>
+        <Text style={styles.heading}>{t("incident.heading")}</Text>
         <Text style={styles.subheading}>{siteName}</Text>
 
-        <Text style={styles.label}>Category</Text>
+        <Text style={styles.label}>{t("incident.categoryLabel")}</Text>
         <View style={styles.categoryGrid}>
-          {CATEGORIES.map((c) => (
+          {CATEGORY_KEYS.map((key) => (
             <TouchableOpacity
-              key={c.key}
-              style={[styles.categoryChip, category === c.key && styles.categoryChipActive]}
-              onPress={() => setCategory(c.key)}
+              key={key}
+              style={[styles.categoryChip, category === key && styles.categoryChipActive]}
+              onPress={() => setCategory(key)}
             >
               <Text
                 style={[
                   styles.categoryChipText,
-                  category === c.key && styles.categoryChipTextActive,
+                  category === key && styles.categoryChipTextActive,
                 ]}
               >
-                {c.label}
+                {t(`incident.categories.${key}` as const)}
               </Text>
             </TouchableOpacity>
           ))}
         </View>
 
-        <Text style={styles.label}>Severity</Text>
+        <Text style={styles.label}>{t("incident.severityLabel")}</Text>
         <View style={styles.severityRow}>
-          {SEVERITIES.map((s) => (
+          {SEVERITY_KEYS.map((s) => (
             <TouchableOpacity
               key={s.key}
               style={[
@@ -121,28 +123,28 @@ export function IncidentReportScreen({ route, navigation }: Props) {
                   severity === s.key && styles.severityTextActive,
                 ]}
               >
-                {s.label}
+                {t(`incident.severities.${s.key}` as const)}
               </Text>
             </TouchableOpacity>
           ))}
         </View>
 
-        <Text style={styles.label}>What happened?</Text>
+        <Text style={styles.label}>{t("incident.descriptionLabel")}</Text>
         <TextInput
           value={description}
           onChangeText={setDescription}
           multiline
-          placeholder="Describe the issue (optional)"
+          placeholder={t("incident.descriptionPlaceholder")}
           placeholderTextColor="#94A3B8"
           style={styles.textArea}
         />
 
-        <Text style={styles.label}>Photo (optional)</Text>
+        <Text style={styles.label}>{t("incident.photoLabel")}</Text>
         {photoUrl ? (
           <View>
             <Image source={{ uri: photoUrl }} style={styles.photoPreview} />
             <TouchableOpacity onPress={() => setPhotoUrl(null)} style={styles.photoClear}>
-              <Text style={styles.photoClearText}>Remove photo</Text>
+              <Text style={styles.photoClearText}>{t("incident.removePhoto")}</Text>
             </TouchableOpacity>
           </View>
         ) : (
@@ -154,7 +156,7 @@ export function IncidentReportScreen({ route, navigation }: Props) {
             {capturingPhoto ? (
               <ActivityIndicator color="#1E3A8A" />
             ) : (
-              <Text style={styles.photoButtonText}>📷 Add photo</Text>
+              <Text style={styles.photoButtonText}>{t("incident.addPhoto")}</Text>
             )}
           </TouchableOpacity>
         )}
@@ -167,7 +169,7 @@ export function IncidentReportScreen({ route, navigation }: Props) {
           {submitting ? (
             <ActivityIndicator color="#fff" />
           ) : (
-            <Text style={styles.submitText}>Submit report</Text>
+            <Text style={styles.submitText}>{t("incident.submit")}</Text>
           )}
         </TouchableOpacity>
       </ScrollView>

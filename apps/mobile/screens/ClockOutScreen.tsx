@@ -1,5 +1,6 @@
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useCallback, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   ActivityIndicator,
   Alert,
@@ -15,6 +16,7 @@ import type { RootStackParamList } from "../navigation/types";
 type Props = NativeStackScreenProps<RootStackParamList, "ClockOut">;
 
 export function ClockOutScreen({ route, navigation }: Props) {
+  const { t } = useTranslation();
   const { shiftId } = route.params;
   const [tasks, setTasks] = useState<TaskRow[]>([]);
   const [loading, setLoading] = useState(true);
@@ -24,11 +26,11 @@ export function ClockOutScreen({ route, navigation }: Props) {
     try {
       setTasks(await fetchShiftTasks(shiftId));
     } catch (e) {
-      Alert.alert("Error", e instanceof Error ? e.message : "Failed to load.");
+      Alert.alert(t("common.error"), e instanceof Error ? e.message : "Failed to load.");
     } finally {
       setLoading(false);
     }
-  }, [shiftId]);
+  }, [shiftId, t]);
 
   useEffect(() => {
     load();
@@ -43,11 +45,11 @@ export function ClockOutScreen({ route, navigation }: Props) {
   const confirmClockOut = () => {
     if (open > 0) {
       Alert.alert(
-        `${open} open task${open === 1 ? "" : "s"}`,
-        "Clock out anyway? Open tasks will stay assigned for tomorrow.",
+        t("clockOut.confirmTitle", { count: open }),
+        t("clockOut.confirmBody"),
         [
-          { text: "Cancel", style: "cancel" },
-          { text: "Clock out", style: "destructive", onPress: doClockOut },
+          { text: t("common.cancel"), style: "cancel" },
+          { text: t("taskList.clockOut"), style: "destructive", onPress: doClockOut },
         ],
       );
       return;
@@ -61,7 +63,7 @@ export function ClockOutScreen({ route, navigation }: Props) {
       await clockOut(shiftId);
       navigation.reset({ index: 0, routes: [{ name: "Sites" }] });
     } catch (e) {
-      Alert.alert("Error", e instanceof Error ? e.message : "Clock out failed.");
+      Alert.alert(t("common.error"), e instanceof Error ? e.message : "Clock out failed.");
     } finally {
       setBusy(false);
     }
@@ -78,12 +80,12 @@ export function ClockOutScreen({ route, navigation }: Props) {
   return (
     <SafeAreaView style={styles.root}>
       <View style={styles.content}>
-        <Text style={styles.heading}>Shift summary</Text>
+        <Text style={styles.heading}>{t("clockOut.heading")}</Text>
 
         <View style={styles.statsRow}>
-          <Stat label="Done" value={done} color="#16A34A" />
-          <Stat label="Open" value={open} color="#F59E0B" />
-          <Stat label="Blocked" value={blocked} color="#DC2626" />
+          <Stat label={t("clockOut.done")} value={done} color="#16A34A" />
+          <Stat label={t("clockOut.open")} value={open} color="#F59E0B" />
+          <Stat label={t("clockOut.blocked")} value={blocked} color="#DC2626" />
         </View>
 
         <TouchableOpacity
@@ -94,12 +96,12 @@ export function ClockOutScreen({ route, navigation }: Props) {
           {busy ? (
             <ActivityIndicator color="#fff" />
           ) : (
-            <Text style={styles.primaryText}>Clock out</Text>
+            <Text style={styles.primaryText}>{t("taskList.clockOut")}</Text>
           )}
         </TouchableOpacity>
 
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.cancel}>
-          <Text style={styles.cancelText}>Back to tasks</Text>
+          <Text style={styles.cancelText}>{t("clockOut.backToTasks")}</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
