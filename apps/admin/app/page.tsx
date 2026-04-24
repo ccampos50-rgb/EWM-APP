@@ -35,6 +35,9 @@ export default async function DashboardPage() {
               <Link href="/billing" className="hover:text-slate-900">
                 Billing
               </Link>
+              <Link href="/reports" className="hover:text-slate-900">
+                Reports
+              </Link>
               <Link href="/audit" className="hover:text-slate-900">
                 Audit
               </Link>

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   ActivityIndicator,
   KeyboardAvoidingView,
@@ -10,8 +11,10 @@ import {
   View,
 } from "react-native";
 import { useAuth } from "../lib/auth";
+import { i18n } from "../lib/i18n";
 
 export function LoginScreen() {
+  const { t } = useTranslation();
   const { signIn } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -20,7 +23,7 @@ export function LoginScreen() {
 
   const handleSubmit = async () => {
     if (!email || !password) {
-      setError("Email and password are required.");
+      setError(t("login.missingFields"));
       return;
     }
     setSubmitting(true);
@@ -30,17 +33,22 @@ export function LoginScreen() {
     if (authError) setError(authError);
   };
 
+  const toggleLang = () => {
+    const next = i18n.language === "en" ? "es" : "en";
+    i18n.changeLanguage(next);
+  };
+
   return (
     <KeyboardAvoidingView
       style={styles.root}
       behavior={Platform.OS === "ios" ? "padding" : undefined}
     >
       <View style={styles.card}>
-        <Text style={styles.brand}>EWM</Text>
-        <Text style={styles.tagline}>People. Performance. Elevated.</Text>
+        <Text style={styles.brand}>{t("brand.name")}</Text>
+        <Text style={styles.tagline}>{t("brand.tagline")}</Text>
 
         <View style={styles.field}>
-          <Text style={styles.label}>Email</Text>
+          <Text style={styles.label}>{t("login.email")}</Text>
           <TextInput
             value={email}
             onChangeText={setEmail}
@@ -48,19 +56,19 @@ export function LoginScreen() {
             autoComplete="email"
             keyboardType="email-address"
             style={styles.input}
-            placeholder="you@example.com"
+            placeholder={t("login.emailPlaceholder")}
             placeholderTextColor="#94A3B8"
           />
         </View>
 
         <View style={styles.field}>
-          <Text style={styles.label}>Password</Text>
+          <Text style={styles.label}>{t("login.password")}</Text>
           <TextInput
             value={password}
             onChangeText={setPassword}
             secureTextEntry
             style={styles.input}
-            placeholder="••••••••"
+            placeholder={t("login.passwordPlaceholder")}
             placeholderTextColor="#94A3B8"
           />
         </View>
@@ -75,8 +83,14 @@ export function LoginScreen() {
           {submitting ? (
             <ActivityIndicator color="#fff" />
           ) : (
-            <Text style={styles.buttonText}>Sign in</Text>
+            <Text style={styles.buttonText}>{t("login.signIn")}</Text>
           )}
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={toggleLang} style={styles.langToggle}>
+          <Text style={styles.langToggleText}>
+            {i18n.language === "en" ? "Español" : "English"}
+          </Text>
         </TouchableOpacity>
       </View>
     </KeyboardAvoidingView>
@@ -148,6 +162,15 @@ const styles = StyleSheet.create({
   buttonText: {
     color: "#fff",
     fontSize: 15,
+    fontWeight: "500",
+  },
+  langToggle: {
+    marginTop: 16,
+    alignItems: "center",
+  },
+  langToggleText: {
+    color: "#0EA5E9",
+    fontSize: 13,
     fontWeight: "500",
   },
 });

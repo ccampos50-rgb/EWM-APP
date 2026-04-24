@@ -78,6 +78,12 @@ export default async function SiteDetailPage({
           </div>
           <div className="flex gap-2">
             <Link
+              href={`/sites/${site.id}/qr`}
+              className="rounded-md border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+            >
+              Print QR codes
+            </Link>
+            <Link
               href={`/sites/${site.id}/live`}
               className="rounded-md border border-[#1E3A8A] px-4 py-2 text-sm font-medium text-[#1E3A8A] hover:bg-[#1E3A8A]/5"
             >
@@ -120,13 +126,21 @@ export default async function SiteDetailPage({
                         })}
                       </div>
                     </div>
-                    <span
-                      className={`rounded-full px-2 py-1 text-xs font-medium capitalize ${
-                        STATUS_COLORS[shift.status] ?? "bg-slate-100 text-slate-700"
-                      }`}
-                    >
-                      {shift.status.replace("_", " ")}
-                    </span>
+                    <div className="flex items-center gap-3">
+                      <span
+                        className={`rounded-full px-2 py-1 text-xs font-medium capitalize ${
+                          STATUS_COLORS[shift.status] ?? "bg-slate-100 text-slate-700"
+                        }`}
+                      >
+                        {shift.status.replace("_", " ")}
+                      </span>
+                      <Link
+                        href={`/sites/${site.id}/shifts/${shift.id}/override`}
+                        className="text-xs text-[#0EA5E9] hover:underline"
+                      >
+                        Override
+                      </Link>
+                    </div>
                   </div>
                   {tasks.length === 0 ? (
                     <div className="px-6 py-4 text-sm text-slate-500">No tasks assigned.</div>

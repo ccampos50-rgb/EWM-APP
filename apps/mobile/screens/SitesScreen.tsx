@@ -1,5 +1,6 @@
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useCallback, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   ActivityIndicator,
   FlatList,
@@ -17,6 +18,7 @@ import type { RootStackParamList } from "../navigation/types";
 type Props = NativeStackScreenProps<RootStackParamList, "Sites">;
 
 export function SitesScreen({ navigation }: Props) {
+  const { t } = useTranslation();
   const { session, signOut } = useAuth();
   const [sites, setSites] = useState<SiteRow[]>([]);
   const [loading, setLoading] = useState(true);
@@ -27,11 +29,11 @@ export function SitesScreen({ navigation }: Props) {
     try {
       setSites(await fetchAccessibleSites());
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Failed to load sites.");
+      setError(e instanceof Error ? e.message : t("sites.loadFailed"));
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [t]);
 
   useEffect(() => {
     load();
@@ -41,15 +43,15 @@ export function SitesScreen({ navigation }: Props) {
     <SafeAreaView style={styles.root}>
       <View style={styles.header}>
         <View>
-          <Text style={styles.brand}>EWM</Text>
+          <Text style={styles.brand}>{t("brand.name")}</Text>
           <Text style={styles.email}>{session?.user.email}</Text>
         </View>
         <TouchableOpacity onPress={signOut}>
-          <Text style={styles.signOut}>Sign out</Text>
+          <Text style={styles.signOut}>{t("common.signOut")}</Text>
         </TouchableOpacity>
       </View>
 
-      <Text style={styles.heading}>Your sites</Text>
+      <Text style={styles.heading}>{t("sites.heading")}</Text>
 
       {loading ? (
         <View style={styles.center}>
@@ -59,15 +61,13 @@ export function SitesScreen({ navigation }: Props) {
         <View style={styles.center}>
           <Text style={styles.errorText}>{error}</Text>
           <TouchableOpacity onPress={load} style={styles.retryButton}>
-            <Text style={styles.retryText}>Retry</Text>
+            <Text style={styles.retryText}>{t("common.retry")}</Text>
           </TouchableOpacity>
         </View>
       ) : sites.length === 0 ? (
         <View style={styles.center}>
-          <Text style={styles.emptyTitle}>No sites assigned</Text>
-          <Text style={styles.emptyText}>
-            Ask your site manager to add you to a site roster.
-          </Text>
+          <Text style={styles.emptyTitle}>{t("sites.emptyTitle")}</Text>
+          <Text style={styles.emptyText}>{t("sites.emptyText")}</Text>
         </View>
       ) : (
         <FlatList

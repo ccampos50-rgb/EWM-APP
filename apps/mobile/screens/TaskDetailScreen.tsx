@@ -1,6 +1,7 @@
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { CameraView, useCameraPermissions } from "expo-camera";
 import { useCallback, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   ActivityIndicator,
   Alert,
@@ -27,6 +28,7 @@ type Props = NativeStackScreenProps<RootStackParamList, "TaskDetail">;
 type ScanGoal = "start" | "complete" | null;
 
 export function TaskDetailScreen({ route, navigation }: Props) {
+  const { t } = useTranslation();
   const { taskId } = route.params;
   const [task, setTask] = useState<TaskRow | null>(null);
   const [loading, setLoading] = useState(true);
@@ -37,15 +39,15 @@ export function TaskDetailScreen({ route, navigation }: Props) {
 
   const load = useCallback(async () => {
     try {
-      const t = await fetchTask(taskId);
-      setTask(t);
-      setNotes(t?.notes ?? "");
+      const fetched = await fetchTask(taskId);
+      setTask(fetched);
+      setNotes(fetched?.notes ?? "");
     } catch (e) {
-      Alert.alert("Error", e instanceof Error ? e.message : "Failed to load task.");
+      Alert.alert(t("common.error"), e instanceof Error ? e.message : "Failed to load task.");
     } finally {
       setLoading(false);
     }
-  }, [taskId]);
+  }, [taskId, t]);
 
   useEffect(() => {
     load();
@@ -55,7 +57,7 @@ export function TaskDetailScreen({ route, navigation }: Props) {
     if (!permission?.granted) {
       const res = await requestPermission();
       if (!res.granted) {
-        Alert.alert("Camera required", "Grant camera access to scan codes.");
+        Alert.alert(t("taskDetail.cameraRequired"), t("taskDetail.cameraRequiredBody"));
         return;
       }
     }
@@ -69,7 +71,7 @@ export function TaskDetailScreen({ route, navigation }: Props) {
     try {
       const resolved = await resolveScanCode(task.site_id, code);
       if (!resolved) {
-        Alert.alert("Unknown code", `"${code}" isn't registered at this site.`);
+        Alert.alert(t("taskDetail.unknownCode"), t("taskDetail.unknownCodeBody", { code }));
         return;
       }
       if (scanGoal === "start") {
@@ -84,17 +86,17 @@ export function TaskDetailScreen({ route, navigation }: Props) {
       }
       await load();
     } catch (e) {
-      Alert.alert("Error", e instanceof Error ? e.message : "Scan action failed.");
+      Alert.alert(t("common.error"), e instanceof Error ? e.message : "Scan action failed.");
     } finally {
       setBusy(false);
     }
   };
 
-  const maybeCapturePhoto = async (t: TaskRow): Promise<string | null> => {
-    if (!t.template?.requires_photo) return null;
+  const maybeCapturePhoto = async (taskArg: TaskRow): Promise<string | null> => {
+    if (!taskArg.template?.requires_photo) return null;
     const photo = await captureTaskPhoto();
     if (!photo) {
-      throw new Error("Photo proof is required for this task.");
+      throw new Error(t("taskDetail.photoRequired"));
     }
     return photo.publicUrl;
   };
@@ -106,7 +108,7 @@ export function TaskDetailScreen({ route, navigation }: Props) {
       await startTask(task.id);
       await load();
     } catch (e) {
-      Alert.alert("Error", e instanceof Error ? e.message : "Failed to start task.");
+      Alert.alert(t("common.error"), e instanceof Error ? e.message : "Failed to start task.");
     } finally {
       setBusy(false);
     }
@@ -120,7 +122,7 @@ export function TaskDetailScreen({ route, navigation }: Props) {
       await completeTask(task.id, { notes, photoUrl: photoUrl ?? undefined });
       navigation.goBack();
     } catch (e) {
-      Alert.alert("Error", e instanceof Error ? e.message : "Failed to complete task.");
+      Alert.alert(t("common.error"), e instanceof Error ? e.message : "Failed to complete task.");
     } finally {
       setBusy(false);
     }
@@ -131,10 +133,10 @@ export function TaskDetailScreen({ route, navigation }: Props) {
       <SafeAreaView style={styles.root}>
         <View style={styles.scannerHeader}>
           <Text style={styles.scannerTitle}>
-            {scanGoal === "start" ? "Scan to start" : "Scan to complete"}
+            {scanGoal === "start" ? t("taskDetail.scanToStart") : t("taskDetail.scanToComplete")}
           </Text>
           <TouchableOpacity onPress={() => setScanGoal(null)}>
-            <Text style={styles.scannerCancel}>Cancel</Text>
+            <Text style={styles.scannerCancel}>{t("common.cancel")}</Text>
           </TouchableOpacity>
         </View>
         <CameraView
@@ -157,7 +159,7 @@ export function TaskDetailScreen({ route, navigation }: Props) {
   if (!task) {
     return (
       <SafeAreaView style={[styles.root, styles.center]}>
-        <Text>Task not found.</Text>
+        <Text>{t("taskDetail.taskNotFound")}</Text>
       </SafeAreaView>
     );
   }
@@ -171,19 +173,25 @@ export function TaskDetailScreen({ route, navigation }: Props) {
     <SafeAreaView style={styles.root}>
       <ScrollView contentContainerStyle={styles.content}>
         <Text style={styles.label}>{task.template?.label ?? task.template_code}</Text>
-        {task.target_ref && <Text style={styles.target}>Target: {task.target_ref}</Text>}
-        {task.template?.expected_minutes != null && (
-          <Text style={styles.meta}>Expected: ~{task.template.expected_minutes} min</Text>
+        {task.target_ref && (
+          <Text style={styles.target}>{t("taskDetail.target", { ref: task.target_ref })}</Text>
         )}
-        <Text style={styles.meta}>Status: {task.status.replace("_", " ")}</Text>
+        {task.template?.expected_minutes != null && (
+          <Text style={styles.meta}>
+            {t("taskDetail.expected", { minutes: task.template.expected_minutes })}
+          </Text>
+        )}
+        <Text style={styles.meta}>
+          {t("siteDetail.statusPrefix")} {task.status.replace("_", " ")}
+        </Text>
 
         <View style={styles.notesBlock}>
-          <Text style={styles.notesLabel}>Notes</Text>
+          <Text style={styles.notesLabel}>{t("taskDetail.notes")}</Text>
           <TextInput
             value={notes}
             onChangeText={setNotes}
             multiline
-            placeholder="Optional notes for this task"
+            placeholder={t("taskDetail.notesPlaceholder")}
             placeholderTextColor="#94A3B8"
             style={styles.notesInput}
             editable={!isDone}
@@ -198,7 +206,7 @@ export function TaskDetailScreen({ route, navigation }: Props) {
                 onPress={() => openScanner("start")}
                 disabled={busy}
               >
-                <Text style={styles.primaryText}>Scan to start</Text>
+                <Text style={styles.primaryText}>{t("taskDetail.scanToStart")}</Text>
               </TouchableOpacity>
             ) : (
               <TouchableOpacity
@@ -206,7 +214,7 @@ export function TaskDetailScreen({ route, navigation }: Props) {
                 onPress={handleStartWithoutScan}
                 disabled={busy}
               >
-                <Text style={styles.primaryText}>Start task</Text>
+                <Text style={styles.primaryText}>{t("taskDetail.startTask")}</Text>
               </TouchableOpacity>
             )}
           </>
@@ -220,7 +228,7 @@ export function TaskDetailScreen({ route, navigation }: Props) {
                 onPress={() => openScanner("complete")}
                 disabled={busy}
               >
-                <Text style={styles.primaryText}>Scan to complete</Text>
+                <Text style={styles.primaryText}>{t("taskDetail.scanToComplete")}</Text>
               </TouchableOpacity>
             ) : (
               <TouchableOpacity
@@ -228,7 +236,7 @@ export function TaskDetailScreen({ route, navigation }: Props) {
                 onPress={handleCompleteWithoutScan}
                 disabled={busy}
               >
-                <Text style={styles.primaryText}>Mark complete</Text>
+                <Text style={styles.primaryText}>{t("taskDetail.markComplete")}</Text>
               </TouchableOpacity>
             )}
           </>
@@ -236,10 +244,12 @@ export function TaskDetailScreen({ route, navigation }: Props) {
 
         {isDone && (
           <View style={styles.doneBlock}>
-            <Text style={styles.doneText}>Completed</Text>
+            <Text style={styles.doneText}>{t("taskDetail.completed")}</Text>
             {task.completed_at && (
               <Text style={styles.doneMeta}>
-                at {new Date(task.completed_at).toLocaleTimeString()}
+                {t("taskDetail.completedAt", {
+                  time: new Date(task.completed_at).toLocaleTimeString(),
+                })}
               </Text>
             )}
           </View>

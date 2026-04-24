@@ -1,6 +1,7 @@
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import * as Location from "expo-location";
 import { useCallback, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   ActivityIndicator,
   Alert,
@@ -24,6 +25,7 @@ import type { RootStackParamList } from "../navigation/types";
 type Props = NativeStackScreenProps<RootStackParamList, "SiteDetail">;
 
 export function SiteDetailScreen({ route, navigation }: Props) {
+  const { t } = useTranslation();
   const { siteId } = route.params;
   const [site, setSite] = useState<SiteRow | null>(null);
   const [shift, setShift] = useState<ShiftRow | null>(null);
@@ -54,7 +56,7 @@ export function SiteDetailScreen({ route, navigation }: Props) {
     try {
       const { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== "granted") {
-        Alert.alert("Location required", "EWM needs location access to confirm you're on site.");
+        Alert.alert(t("siteDetail.locationRequired"), t("siteDetail.locationRequiredBody"));
         return;
       }
 
@@ -71,8 +73,11 @@ export function SiteDetailScreen({ route, navigation }: Props) {
         );
         if (d > site.geofence_radius_m) {
           Alert.alert(
-            "Too far from site",
-            `You're ${Math.round(d)} m from the site. Clock-in allowed within ${site.geofence_radius_m} m.`,
+            t("siteDetail.tooFar"),
+            t("siteDetail.tooFarBody", {
+              distance: Math.round(d),
+              radius: site.geofence_radius_m,
+            }),
           );
           return;
         }
@@ -81,7 +86,10 @@ export function SiteDetailScreen({ route, navigation }: Props) {
       await clockIn(shift.id, position.coords.latitude, position.coords.longitude);
       navigation.replace("TaskList", { shiftId: shift.id, siteName: site.name, siteId: site.id });
     } catch (e) {
-      Alert.alert("Clock-in failed", e instanceof Error ? e.message : "Unknown error.");
+      Alert.alert(
+        t("siteDetail.clockInFailed"),
+        e instanceof Error ? e.message : t("common.error"),
+      );
     } finally {
       setClocking(false);
     }
@@ -98,7 +106,7 @@ export function SiteDetailScreen({ route, navigation }: Props) {
   if (!site) {
     return (
       <SafeAreaView style={[styles.root, styles.center]}>
-        <Text>Site not found.</Text>
+        <Text>{t("siteDetail.siteNotFound")}</Text>
       </SafeAreaView>
     );
   }
@@ -118,7 +126,7 @@ export function SiteDetailScreen({ route, navigation }: Props) {
         {site.address && <Text style={styles.address}>{site.address}</Text>}
 
         <View style={styles.card}>
-          <Text style={styles.cardLabel}>Today's shift</Text>
+          <Text style={styles.cardLabel}>{t("siteDetail.todayShift")}</Text>
           {shift ? (
             <>
               <Text style={styles.cardValue}>
@@ -132,10 +140,12 @@ export function SiteDetailScreen({ route, navigation }: Props) {
                   minute: "2-digit",
                 })}
               </Text>
-              <Text style={styles.cardHint}>Status: {shift.status.replace("_", " ")}</Text>
+              <Text style={styles.cardHint}>
+                {t("siteDetail.statusPrefix")} {shift.status.replace("_", " ")}
+              </Text>
             </>
           ) : (
-            <Text style={styles.cardHint}>No shift scheduled for today at this site.</Text>
+            <Text style={styles.cardHint}>{t("siteDetail.noShift")}</Text>
           )}
         </View>
 
@@ -150,7 +160,7 @@ export function SiteDetailScreen({ route, navigation }: Props) {
             {clocking ? (
               <ActivityIndicator color="#fff" />
             ) : (
-              <Text style={styles.primaryButtonText}>Clock in</Text>
+              <Text style={styles.primaryButtonText}>{t("siteDetail.clockIn")}</Text>
             )}
           </TouchableOpacity>
         )}
@@ -166,7 +176,7 @@ export function SiteDetailScreen({ route, navigation }: Props) {
               })
             }
           >
-            <Text style={styles.primaryButtonText}>View tasks</Text>
+            <Text style={styles.primaryButtonText}>{t("siteDetail.viewTasks")}</Text>
           </TouchableOpacity>
         )}
       </ScrollView>

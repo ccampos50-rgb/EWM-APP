@@ -60,6 +60,7 @@ export default async function AuditLogPage({
               <Link href="/overview" className="hover:text-slate-900">Overview</Link>
               <Link href="/sites" className="hover:text-slate-900">Sites</Link>
               <Link href="/billing" className="hover:text-slate-900">Billing</Link>
+              <Link href="/reports" className="hover:text-slate-900">Reports</Link>
               <Link href="/audit" className="font-medium text-slate-900">Audit</Link>
             </nav>
           </div>
