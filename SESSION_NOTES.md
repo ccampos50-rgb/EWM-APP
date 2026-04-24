@@ -9,12 +9,14 @@ Last worked: 2026-04-23
 - Region: East US (Ohio)
 - Plan: Pro
 
-**Migrations applied (all 5)**:
+**Migrations applied (all 7)**:
 - `0001_initial_schema.sql` — 13 tables, enums, RLS, helper fns
 - `0002_storage_and_realtime.sql` — task-photos bucket, Realtime publication
 - `0003_fix_rls_policies.sql` — missing policies discovered during testing
 - `0004_billing_exports.sql` — billing-exports bucket, customer_rates, amount_cents
-- `0005_push_tokens.sql` — **NOT YET APPLIED** — paste into SQL Editor before next session
+- `0005_push_tokens.sql` — push_token column on profiles
+- `0006_supervisor_overrides.sql` — shift_overrides table + RLS
+- `0007_schedule_billing_cron.sql` — pg_cron + pg_net + nightly schedule
 
 **Auth**:
 - super_admin user: `ccampos50@gmail.com` / `EwmAdmin2026!`
@@ -79,9 +81,11 @@ Login at http://localhost:3000/login with `ccampos50@gmail.com` / `EwmAdmin2026!
 
 ## Pending — waiting on user
 
-1. **GitHub remote** — create empty repo at github.com/new, paste URL here, I'll add remote + push
-2. **Supabase access token** — generate at supabase.com/dashboard/account/tokens, paste here, I'll deploy the billing-rollup Edge Function
-3. **Apply migration 0005** — paste `supabase/migrations/0005_push_tokens.sql` into Supabase SQL Editor
+✅ All resolved as of 2026-04-24:
+- GitHub: live at https://github.com/ccampos50-rgb/EWM-APP — `main` tracks `origin/main`
+- Edge Function `billing-rollup` deployed to project `pbhtuyjigpldvcztepss`
+- Migrations 0005, 0006, 0007 applied
+- Billing rollup scheduled nightly at 02:00 UTC via pg_cron + pg_net
 
 ## Roadmap — what's next
 
