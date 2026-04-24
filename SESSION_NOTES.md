@@ -65,9 +65,11 @@ Login at http://localhost:3000/login with `ccampos50@gmail.com` / `EwmAdmin2026!
 
 ## Testing
 
-- **20-test HTTP + Supabase suite**: `/tmp/ewm-migrate/test20.mjs` — 20/20 passing
-- **1000-test stability sweep**: `/tmp/ewm-migrate/test1000.mjs` — ran with passing rate of [TODO at commit time]
-- Both run with `node test20.mjs` / `node test1000.mjs` after logging in once
+- **20-test HTTP + Supabase suite**: `/tmp/ewm-migrate/test20.mjs` — **20/20 passing**
+- **1000-test stability sweep**: `/tmp/ewm-migrate/test1000.mjs` — **1000/1000 passing** in 368.5s (100% pass rate, see [TEST_RESULTS.md](TEST_RESULTS.md))
+- Mobile typecheck: **clean** (i18n + push notifications wired)
+- Admin typecheck: **clean**
+- Both run with `node test20.mjs` / `node test1000.mjs` after Next.js is up
 
 ## Known issues
 
