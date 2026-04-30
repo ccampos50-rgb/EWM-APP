@@ -38,7 +38,7 @@ function RootNavigator() {
   if (loading || walkthroughDone === null) {
     return (
       <View style={styles.loading}>
-        <ActivityIndicator color="#1E3A8A" />
+        <ActivityIndicator color="#101A25" />
       </View>
     );
   }
@@ -56,7 +56,7 @@ function RootNavigator() {
       screenOptions={{
         headerStyle: { backgroundColor: "#fff" },
         headerTitleStyle: { color: "#0F172A" },
-        headerTintColor: "#1E3A8A",
+        headerTintColor: "#101A25",
       }}
     >
       <Stack.Screen

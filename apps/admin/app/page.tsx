@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
+import { fetchDashboardStats } from "@/lib/db";
 import { signOut } from "./login/actions";
 
 export default async function DashboardPage() {
@@ -14,13 +15,17 @@ export default async function DashboardPage() {
     .eq("id", user?.id ?? "")
     .maybeSingle();
 
+  const stats = await fetchDashboardStats();
+  const completionPct =
+    stats.tasksTotal > 0 ? Math.round((stats.tasksDone / stats.tasksTotal) * 100) : 0;
+
   return (
     <div className="min-h-screen bg-slate-50">
       <header className="border-b border-slate-200 bg-white">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
           <div className="flex items-center gap-6">
-            <Link href="/" className="text-xl font-bold text-[#1E3A8A]">
-              EWM
+            <Link href="/" className="flex items-center gap-2" aria-label="EWM">
+              <img src="/ewm-logo.png" alt="EWM" className="h-8 w-auto" />
             </Link>
             <nav className="flex gap-4 text-sm text-slate-600">
               <Link href="/" className="font-medium text-slate-900">
@@ -29,8 +34,15 @@ export default async function DashboardPage() {
               <Link href="/overview" className="hover:text-slate-900">
                 Overview
               </Link>
+              <Link href="/customers" className="hover:text-slate-900">Customers</Link>
               <Link href="/sites" className="hover:text-slate-900">
                 Sites
+              </Link>
+              <Link href="/workers" className="hover:text-slate-900">
+                Workers
+              </Link>
+              <Link href="/payroll" className="hover:text-slate-900">
+                Payroll
               </Link>
               <Link href="/billing" className="hover:text-slate-900">
                 Billing
@@ -62,20 +74,42 @@ export default async function DashboardPage() {
           Signed in as <span className="font-medium">{user?.email}</span>
         </p>
 
-        <section className="mt-10 grid gap-4 md:grid-cols-3">
-          <DashboardCard title="Live sites" value="—" hint="Sites with active shifts" />
-          <DashboardCard title="Workers on shift" value="—" hint="Across all sites" />
-          <DashboardCard title="Tasks today" value="—" hint="Completed / total" />
+        <section className="mt-10 grid gap-4 md:grid-cols-4">
+          <DashboardCard
+            title="Live sites"
+            value={String(stats.liveSites)}
+            hint="Sites with ≥1 worker clocked in"
+          />
+          <DashboardCard
+            title="Workers on shift"
+            value={String(stats.workersOnShift)}
+            hint="Currently clocked in"
+          />
+          <DashboardCard
+            title="Hours today"
+            value={stats.hoursToday.toFixed(1)}
+            hint="Sum of clocked-in time"
+          />
+          <DashboardCard
+            title="Tasks today"
+            value={`${stats.tasksDone} / ${stats.tasksTotal}`}
+            hint={`${completionPct}% complete`}
+          />
         </section>
 
-        <section className="mt-10 rounded-lg border border-dashed border-slate-300 bg-white p-8 text-center">
-          <p className="text-sm text-slate-600">
-            Live metrics wire up in Week 3. Go to{" "}
-            <Link href="/sites" className="font-medium text-[#0EA5E9] hover:underline">
-              Sites
-            </Link>{" "}
-            to view site rosters and schedule shifts.
-          </p>
+        <section className="mt-10 grid gap-4 md:grid-cols-3">
+          <Link href="/sites" className="rounded-lg border border-slate-200 bg-white p-5 hover:border-[#275768] hover:shadow-sm">
+            <div className="text-sm font-medium text-slate-900">Sites</div>
+            <p className="mt-1 text-xs text-slate-500">Live boards, schedules, geo-fence, QR codes.</p>
+          </Link>
+          <Link href="/workers" className="rounded-lg border border-slate-200 bg-white p-5 hover:border-[#275768] hover:shadow-sm">
+            <div className="text-sm font-medium text-slate-900">Workers</div>
+            <p className="mt-1 text-xs text-slate-500">Roster, hours-this-week, current task per worker.</p>
+          </Link>
+          <Link href="/reports" className="rounded-lg border border-slate-200 bg-white p-5 hover:border-[#275768] hover:shadow-sm">
+            <div className="text-sm font-medium text-slate-900">Reports</div>
+            <p className="mt-1 text-xs text-slate-500">Daily totals, template performance, incidents.</p>
+          </Link>
         </section>
       </main>
     </div>

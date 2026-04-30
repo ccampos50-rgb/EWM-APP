@@ -4,6 +4,7 @@ export const es: TranslationKeys = {
   brand: {
     name: "EWM",
     tagline: "Gente. Desempeño. Elevado.",
+    web: "ewm-altus.com",
   },
   login: {
     email: "Correo",
