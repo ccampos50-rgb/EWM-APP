@@ -112,7 +112,7 @@ export function RateEditor({
           <button
             type="submit"
             disabled={pending}
-            className="w-full rounded-md bg-[#1E3A8A] px-3 py-1.5 text-sm font-medium text-white hover:bg-[#1E3A8A]/90 disabled:opacity-60"
+            className="w-full rounded-md bg-[#0E3D52] px-3 py-1.5 text-sm font-medium text-white hover:bg-[#0E3D52]/90 disabled:opacity-60"
           >
             {pending ? "Adding…" : "+ Add rate"}
           </button>

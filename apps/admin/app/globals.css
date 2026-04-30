@@ -3,6 +3,14 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+
+  /* EWM Altus brand */
+  --altus-primary: #0E3D52;
+  --altus-primary-mid: #1A5570;
+  --altus-accent: #5EB4CC;
+  --altus-accent-bright: #7FC4DA;
+  --altus-cream: #F5F0E6;
+  --altus-muted: #7A9AAB;
 }
 
 @theme inline {
@@ -10,17 +18,34 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
+  --font-serif: var(--font-serif);
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-altus-primary: var(--altus-primary);
+  --color-altus-primary-mid: var(--altus-primary-mid);
+  --color-altus-accent: var(--altus-accent);
+  --color-altus-accent-bright: var(--altus-accent-bright);
+  --color-altus-cream: var(--altus-cream);
+  --color-altus-muted: var(--altus-muted);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+}
+
+/* Altus wordmark style — used in headers across the app */
+.altus-wordmark {
+  font-family: var(--font-serif), Georgia, serif;
+  letter-spacing: 0.02em;
+}
+.altus-wordmark .altus-em {
+  font-style: italic;
+  color: var(--altus-accent);
+}
+
+/* Login screen gradient background */
+.altus-gradient {
+  background:
+    radial-gradient(circle at 50% 20%, var(--altus-primary-mid) 0%, var(--altus-primary) 70%);
 }

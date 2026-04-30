@@ -63,7 +63,7 @@ export function WorkerForm({
             <button
               type="button"
               onClick={() => setPassword(generatePassword())}
-              className="font-medium text-[#0EA5E9] hover:underline"
+              className="font-medium text-[#5EB4CC] hover:underline"
             >
               Generate
             </button>
@@ -147,7 +147,7 @@ export function WorkerForm({
       <button
         type="submit"
         disabled={pending || sites.length === 0}
-        className="w-full rounded-md bg-[#1E3A8A] px-4 py-2 text-sm font-medium text-white transition hover:bg-[#1E3A8A]/90 disabled:opacity-60"
+        className="w-full rounded-md bg-[#0E3D52] px-4 py-2 text-sm font-medium text-white transition hover:bg-[#0E3D52]/90 disabled:opacity-60"
       >
         {pending ? "Creating worker…" : "Create worker"}
       </button>

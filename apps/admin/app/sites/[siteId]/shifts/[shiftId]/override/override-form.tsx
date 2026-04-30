@@ -90,7 +90,7 @@ export function OverrideForm({
       <button
         type="submit"
         disabled={pending}
-        className="w-full rounded-md bg-[#1E3A8A] px-4 py-2 text-sm font-medium text-white hover:bg-[#1E3A8A]/90 disabled:opacity-60"
+        className="w-full rounded-md bg-[#0E3D52] px-4 py-2 text-sm font-medium text-white hover:bg-[#0E3D52]/90 disabled:opacity-60"
       >
         {pending ? "Recording override…" : "Record override"}
       </button>

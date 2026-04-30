@@ -58,12 +58,14 @@ export default async function BillingPage() {
       <header className="border-b border-slate-200 bg-white">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
           <div className="flex items-center gap-6">
-            <Link href="/" className="text-xl font-bold text-[#1E3A8A]">EWM</Link>
+            <Link href="/" className="altus-wordmark text-xl text-[#0E3D52]">EWM <span className="italic text-[#5EB4CC]">Altus</span></Link>
             <nav className="flex gap-4 text-sm text-slate-600">
               <Link href="/" className="hover:text-slate-900">Dashboard</Link>
               <Link href="/overview" className="hover:text-slate-900">Overview</Link>
               <Link href="/sites" className="hover:text-slate-900">Sites</Link>
+              <Link href="/workers" className="hover:text-slate-900">Workers</Link>
               <Link href="/billing" className="font-medium text-slate-900">Billing</Link>
+              <Link href="/payroll" className="hover:text-slate-900">Payroll</Link>
               <Link href="/audit" className="hover:text-slate-900">Audit</Link>
             </nav>
           </div>
@@ -95,7 +97,12 @@ export default async function BillingPage() {
               >
                 <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-200 bg-slate-50 px-6 py-4">
                   <div>
-                    <div className="text-sm font-semibold text-slate-900">{s.customer.name}</div>
+                    <Link
+                      href={`/billing/${s.customer.id}`}
+                      className="text-sm font-semibold text-slate-900 hover:text-[#5EB4CC]"
+                    >
+                      {s.customer.name} →
+                    </Link>
                     <div className="text-xs capitalize text-slate-500">
                       {s.customer.vertical.replace("_", " ")}
                     </div>
