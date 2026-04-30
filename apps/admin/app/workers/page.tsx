@@ -23,7 +23,7 @@ export default async function WorkersPage() {
       <header className="border-b border-slate-200 bg-white">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
           <div className="flex items-center gap-6">
-            <Link href="/" className="text-xl font-bold text-[#1E3A8A]">EWM</Link>
+            <Link href="/" className="altus-wordmark text-xl text-[#0E3D52]">EWM <span className="italic text-[#5EB4CC]">Altus</span></Link>
             <nav className="flex gap-4 text-sm text-slate-600">
               <Link href="/" className="hover:text-slate-900">Dashboard</Link>
               <Link href="/sites" className="hover:text-slate-900">Sites</Link>
@@ -44,7 +44,7 @@ export default async function WorkersPage() {
           </div>
           <Link
             href="/workers/new"
-            className="rounded-md bg-[#1E3A8A] px-4 py-2 text-sm font-medium text-white hover:bg-[#1E3A8A]/90"
+            className="rounded-md bg-[#0E3D52] px-4 py-2 text-sm font-medium text-white hover:bg-[#0E3D52]/90"
           >
             + Add worker
           </Link>
@@ -53,7 +53,7 @@ export default async function WorkersPage() {
         {sites.length === 0 ? (
           <div className="rounded-lg border border-dashed border-slate-300 bg-white p-12 text-center">
             <p className="text-sm text-slate-500">
-              No sites yet. <Link href="/sites/new" className="font-medium text-[#0EA5E9] hover:underline">Add a site</Link> first.
+              No sites yet. <Link href="/sites/new" className="font-medium text-[#5EB4CC] hover:underline">Add a site</Link> first.
             </p>
           </div>
         ) : (
@@ -69,7 +69,7 @@ export default async function WorkersPage() {
                   </div>
                   <Link
                     href={`/workers/new?site=${site.id}`}
-                    className="text-xs font-medium text-[#0EA5E9] hover:underline"
+                    className="text-xs font-medium text-[#5EB4CC] hover:underline"
                   >
                     + Add to this site
                   </Link>
@@ -101,7 +101,7 @@ export default async function WorkersPage() {
                               {hrs > 0 ? hrs.toFixed(1) : "—"}
                             </td>
                             <td className="px-6 py-3 text-right">
-                              <Link href={`/workers/${w.id}`} className="text-xs font-medium text-[#0EA5E9] hover:underline">
+                              <Link href={`/workers/${w.id}`} className="text-xs font-medium text-[#5EB4CC] hover:underline">
                                 Open →
                               </Link>
                             </td>

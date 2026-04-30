@@ -112,7 +112,7 @@ export function SiteForm({
           <button
             type="button"
             onClick={useMyLocation}
-            className="text-xs font-medium text-[#0EA5E9] hover:underline"
+            className="text-xs font-medium text-[#5EB4CC] hover:underline"
           >
             Use my current location
           </button>
@@ -162,7 +162,7 @@ export function SiteForm({
               href={`https://www.google.com/maps?q=${lat},${lng}`}
               target="_blank"
               rel="noreferrer"
-              className="text-[#0EA5E9] hover:underline"
+              className="text-[#5EB4CC] hover:underline"
             >
               open in Google Maps
             </a>
@@ -193,7 +193,7 @@ export function SiteForm({
       <button
         type="submit"
         disabled={pending || customers.length === 0}
-        className="w-full rounded-md bg-[#1E3A8A] px-4 py-2 text-sm font-medium text-white transition hover:bg-[#1E3A8A]/90 disabled:opacity-60"
+        className="w-full rounded-md bg-[#0E3D52] px-4 py-2 text-sm font-medium text-white transition hover:bg-[#0E3D52]/90 disabled:opacity-60"
       >
         {pending ? pendingLabel : submitLabel}
       </button>

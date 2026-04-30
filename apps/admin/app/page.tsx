@@ -2,6 +2,7 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { fetchDashboardStats } from "@/lib/db";
 import { signOut } from "./login/actions";
+import { AltusMark } from "@/components/altus-mark";
 
 export default async function DashboardPage() {
   const supabase = await createClient();
@@ -24,8 +25,9 @@ export default async function DashboardPage() {
       <header className="border-b border-slate-200 bg-white">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
           <div className="flex items-center gap-6">
-            <Link href="/" className="flex items-center gap-2" aria-label="EWM">
-              <img src="/ewm-logo.png" alt="EWM" className="h-8 w-auto" />
+            <Link href="/" className="flex items-center gap-2" aria-label="EWM Altus">
+              <AltusMark size={32} />
+              <span className="altus-wordmark text-xl text-[#0E3D52]">EWM <span className="italic text-[#5EB4CC]">Altus</span></span>
             </Link>
             <nav className="flex gap-4 text-sm text-slate-600">
               <Link href="/" className="font-medium text-slate-900">

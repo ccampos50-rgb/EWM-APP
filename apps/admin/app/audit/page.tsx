@@ -54,7 +54,7 @@ export default async function AuditLogPage({
       <header className="border-b border-slate-200 bg-white">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
           <div className="flex items-center gap-6">
-            <Link href="/" className="text-xl font-bold text-[#1E3A8A]">EWM</Link>
+            <Link href="/" className="altus-wordmark text-xl text-[#0E3D52]">EWM <span className="italic text-[#5EB4CC]">Altus</span></Link>
             <nav className="flex gap-4 text-sm text-slate-600">
               <Link href="/" className="hover:text-slate-900">Dashboard</Link>
               <Link href="/overview" className="hover:text-slate-900">Overview</Link>
@@ -110,7 +110,7 @@ export default async function AuditLogPage({
           <div className="flex items-end">
             <button
               type="submit"
-              className="rounded-md bg-[#1E3A8A] px-4 py-1.5 text-sm font-medium text-white"
+              className="rounded-md bg-[#0E3D52] px-4 py-1.5 text-sm font-medium text-white"
             >
               Apply
             </button>

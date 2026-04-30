@@ -46,7 +46,7 @@ export default async function SiteDetailPage({
       <header className="border-b border-slate-200 bg-white">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
           <div className="flex items-center gap-6">
-            <Link href="/" className="text-xl font-bold text-[#1E3A8A]">
+            <Link href="/" className="text-xl font-bold text-[#0E3D52]">
               EWM
             </Link>
             <nav className="flex gap-4 text-sm text-slate-600">
@@ -103,19 +103,19 @@ export default async function SiteDetailPage({
             </Link>
             <Link
               href={`/sites/${site.id}/live`}
-              className="rounded-md border border-[#1E3A8A] px-4 py-2 text-sm font-medium text-[#1E3A8A] hover:bg-[#1E3A8A]/5"
+              className="rounded-md border border-[#0E3D52] px-4 py-2 text-sm font-medium text-[#0E3D52] hover:bg-[#0E3D52]/5"
             >
               Live board
             </Link>
             <Link
               href={`/workers/new?site=${site.id}`}
-              className="rounded-md border border-[#1E3A8A] px-4 py-2 text-sm font-medium text-[#1E3A8A] hover:bg-[#1E3A8A]/5"
+              className="rounded-md border border-[#0E3D52] px-4 py-2 text-sm font-medium text-[#0E3D52] hover:bg-[#0E3D52]/5"
             >
               + Add worker
             </Link>
             <Link
               href={`/sites/${site.id}/new-shift`}
-              className="rounded-md bg-[#1E3A8A] px-4 py-2 text-sm font-medium text-white hover:bg-[#1E3A8A]/90"
+              className="rounded-md bg-[#0E3D52] px-4 py-2 text-sm font-medium text-white hover:bg-[#0E3D52]/90"
             >
               + Schedule shift
             </Link>
@@ -144,7 +144,7 @@ export default async function SiteDetailPage({
                   <Link
                     key={row.shift_id}
                     href={`/workers/${row.worker_id}`}
-                    className="rounded-lg border border-slate-200 bg-white p-4 hover:border-[#0EA5E9] hover:shadow-sm"
+                    className="rounded-lg border border-slate-200 bg-white p-4 hover:border-[#5EB4CC] hover:shadow-sm"
                   >
                     <div className="flex items-baseline justify-between">
                       <div className="font-medium text-slate-900">{row.worker_name}</div>
@@ -159,7 +159,7 @@ export default async function SiteDetailPage({
                         <div className="text-sm text-slate-700">{row.task_label}</div>
                         <div className="mt-1 flex items-center gap-2">
                           {row.task_target_ref && (
-                            <span className="rounded bg-[#0EA5E9]/10 px-2 py-0.5 text-xs font-medium text-[#0369A1]">
+                            <span className="rounded bg-[#5EB4CC]/10 px-2 py-0.5 text-xs font-medium text-[#0369A1]">
                               Room {row.task_target_ref}
                             </span>
                           )}
@@ -216,7 +216,7 @@ export default async function SiteDetailPage({
                       </span>
                       <Link
                         href={`/sites/${site.id}/shifts/${shift.id}/override`}
-                        className="text-xs text-[#0EA5E9] hover:underline"
+                        className="text-xs text-[#5EB4CC] hover:underline"
                       >
                         Override
                       </Link>
@@ -242,7 +242,7 @@ export default async function SiteDetailPage({
                           <div className="flex items-center gap-2">
                             <Link
                               href={`/sites/${site.id}/tasks/${t.id}/reassign`}
-                              className="text-xs text-[#0EA5E9] hover:underline"
+                              className="text-xs text-[#5EB4CC] hover:underline"
                             >
                               Reassign
                             </Link>
@@ -281,7 +281,7 @@ export default async function SiteDetailPage({
                         href={`https://www.google.com/maps?q=${site.latitude},${site.longitude}`}
                         target="_blank"
                         rel="noreferrer"
-                        className="text-[#0EA5E9] hover:underline"
+                        className="text-[#5EB4CC] hover:underline"
                       >
                         (map ↗)
                       </a>

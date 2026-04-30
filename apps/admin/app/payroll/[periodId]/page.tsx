@@ -34,7 +34,7 @@ export default async function PayPeriodPage({
       <header className="border-b border-slate-200 bg-white">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
           <div className="flex items-center gap-6">
-            <Link href="/" className="text-xl font-bold text-[#1E3A8A]">EWM</Link>
+            <Link href="/" className="altus-wordmark text-xl text-[#0E3D52]">EWM <span className="italic text-[#5EB4CC]">Altus</span></Link>
             <nav className="flex gap-4 text-sm text-slate-600">
               <Link href="/" className="hover:text-slate-900">Dashboard</Link>
               <Link href="/sites" className="hover:text-slate-900">Sites</Link>
@@ -74,7 +74,7 @@ export default async function PayPeriodPage({
           <div className="flex flex-wrap items-end gap-2">
             <a
               href={`/payroll/${periodId}/csv`}
-              className="rounded-md border border-[#1E3A8A] px-3 py-1.5 text-sm font-medium text-[#1E3A8A] hover:bg-[#1E3A8A]/5"
+              className="rounded-md border border-[#0E3D52] px-3 py-1.5 text-sm font-medium text-[#0E3D52] hover:bg-[#0E3D52]/5"
             >
               Download CSV
             </a>
@@ -124,7 +124,7 @@ export default async function PayPeriodPage({
                     <td className="px-6 py-3">
                       <Link
                         href={`/workers/${l.worker_id}`}
-                        className="font-medium text-slate-900 hover:text-[#0EA5E9]"
+                        className="font-medium text-slate-900 hover:text-[#5EB4CC]"
                       >
                         {l.worker_name}
                       </Link>

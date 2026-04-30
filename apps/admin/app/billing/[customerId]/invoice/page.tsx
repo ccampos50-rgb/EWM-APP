@@ -74,7 +74,7 @@ export default async function InvoicePage({
           </Link>
           <button
             onClick={undefined}
-            className="rounded-md bg-[#1E3A8A] px-4 py-2 text-sm font-medium text-white hover:bg-[#1E3A8A]/90 print:hidden"
+            className="rounded-md bg-[#0E3D52] px-4 py-2 text-sm font-medium text-white hover:bg-[#0E3D52]/90 print:hidden"
             data-print-button
           >
             Print / Save as PDF
@@ -85,7 +85,7 @@ export default async function InvoicePage({
       <main className="mx-auto my-8 max-w-4xl bg-white p-12 shadow-sm print:my-0 print:max-w-none print:p-8 print:shadow-none">
         <div className="flex items-start justify-between border-b border-slate-200 pb-6">
           <div>
-            <div className="text-3xl font-bold text-[#1E3A8A]">EWM</div>
+            <div className="text-3xl font-bold text-[#0E3D52]">EWM</div>
             <div className="mt-1 text-sm text-slate-500">Elevated Workforce Management</div>
             <div className="mt-1 text-xs text-slate-500">People. Performance. Elevated.</div>
           </div>
@@ -144,7 +144,7 @@ export default async function InvoicePage({
               <td colSpan={5} className="pt-3 text-right text-sm font-semibold text-slate-700">
                 Total due
               </td>
-              <td className="pt-3 text-right font-mono text-lg font-bold text-[#1E3A8A]">
+              <td className="pt-3 text-right font-mono text-lg font-bold text-[#0E3D52]">
                 {fmtUsd(totalCents)}
               </td>
             </tr>
