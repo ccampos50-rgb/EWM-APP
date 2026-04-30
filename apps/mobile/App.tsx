@@ -7,6 +7,7 @@ import { ActivityIndicator, StyleSheet, View } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { AuthProvider, useAuth } from "./lib/auth";
 import "./lib/i18n";
+import { colors } from "./lib/theme";
 import { registerForPushNotifications } from "./lib/push";
 import { ClockOutScreen } from "./screens/ClockOutScreen";
 import { HomeScreen } from "./screens/HomeScreen";
@@ -54,9 +55,9 @@ function RootNavigator() {
   return (
     <Stack.Navigator
       screenOptions={{
-        headerStyle: { backgroundColor: "#fff" },
-        headerTitleStyle: { color: "#0F172A" },
-        headerTintColor: "#101A25",
+        headerStyle: { backgroundColor: colors.navy },
+        headerTitleStyle: { color: "#FFFFFF", fontWeight: "600" },
+        headerTintColor: "#FFFFFF",
       }}
     >
       <Stack.Screen

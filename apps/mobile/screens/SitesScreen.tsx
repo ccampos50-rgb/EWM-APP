@@ -55,7 +55,7 @@ export function SitesScreen({ navigation }: Props) {
 
       {loading ? (
         <View style={styles.center}>
-          <ActivityIndicator color="#1E3A8A" />
+          <ActivityIndicator color="#1B3A4C" />
         </View>
       ) : error ? (
         <View style={styles.center}>
@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
     borderBottomColor: "#E2E8F0",
     backgroundColor: "#fff",
   },
-  brand: { fontSize: 20, fontWeight: "700", color: "#1E3A8A" },
+  brand: { fontSize: 20, fontWeight: "700", color: "#1B3A4C" },
   email: { fontSize: 12, color: "#64748B", marginTop: 2 },
   signOut: { fontSize: 14, color: "#475569" },
   heading: {
@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
   siteName: { fontSize: 16, fontWeight: "600", color: "#0F172A" },
   customerName: {
     fontSize: 13,
-    color: "#0EA5E9",
+    color: "#3D7A9A",
     marginTop: 4,
     textTransform: "capitalize",
   },
@@ -139,7 +139,7 @@ const styles = StyleSheet.create({
     marginTop: 16,
     paddingHorizontal: 16,
     paddingVertical: 8,
-    backgroundColor: "#1E3A8A",
+    backgroundColor: "#1B3A4C",
     borderRadius: 6,
   },
   retryText: { color: "#fff", fontSize: 14, fontWeight: "500" },

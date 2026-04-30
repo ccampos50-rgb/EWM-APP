@@ -61,7 +61,7 @@ export default async function SiteDetailPage({
               </Link>
             </nav>
           </div>
-          <form action={signOut}>
+          <form action={signOut} className="flex items-center gap-3"><a href="https://elevated-workforce.com" target="_blank" rel="noopener" className="rounded-full border border-slate-300 bg-white px-3 py-1 text-xs font-medium text-slate-700 transition hover:border-[#5EB4CC] hover:text-[#5EB4CC]">EWM &#8599;</a>
             <button
               type="submit"
               className="text-sm font-medium text-slate-600 hover:text-slate-900"

@@ -154,7 +154,7 @@ export function IncidentReportScreen({ route, navigation }: Props) {
             disabled={capturingPhoto}
           >
             {capturingPhoto ? (
-              <ActivityIndicator color="#1E3A8A" />
+              <ActivityIndicator color="#1B3A4C" />
             ) : (
               <Text style={styles.photoButtonText}>{t("incident.addPhoto")}</Text>
             )}
@@ -203,8 +203,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
   categoryChipActive: {
-    backgroundColor: "#1E3A8A",
-    borderColor: "#1E3A8A",
+    backgroundColor: "#1B3A4C",
+    borderColor: "#1B3A4C",
   },
   categoryChipText: { fontSize: 13, color: "#334155" },
   categoryChipTextActive: { color: "#fff", fontWeight: "500" },
@@ -251,7 +251,7 @@ const styles = StyleSheet.create({
   photoClearText: { fontSize: 13, color: "#DC2626" },
   submit: {
     marginTop: 28,
-    backgroundColor: "#1E3A8A",
+    backgroundColor: "#1B3A4C",
     paddingVertical: 14,
     borderRadius: 8,
     alignItems: "center",
