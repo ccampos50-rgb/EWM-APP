@@ -11,7 +11,7 @@
     "splash": {
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
-      "backgroundColor": "#1E3A8A"
+      "backgroundColor": "#1B3A4C"
     },
     "ios": {
       "supportsTablet": true,
@@ -19,18 +19,27 @@
       "infoPlist": {
         "NSCameraUsageDescription": "EWM Workforce uses the camera to scan site, room, and asset QR codes.",
         "NSLocationWhenInUseUsageDescription": "EWM Workforce uses your location to confirm you're on site at clock-in.",
-        "NSPhotoLibraryUsageDescription": "EWM Workforce can attach photos to tasks as proof of completion."
+        "NSPhotoLibraryUsageDescription": "EWM Workforce can attach photos to tasks as proof of completion.",
+        "ITSAppUsesNonExemptEncryption": false
       }
     },
     "android": {
       "package": "com.ewm.workforce",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#1E3A8A"
+        "backgroundColor": "#1B3A4C"
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
-      "permissions": ["CAMERA", "ACCESS_FINE_LOCATION", "ACCESS_COARSE_LOCATION"]
+      "permissions": [
+        "CAMERA",
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION",
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO",
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -47,7 +56,14 @@
         {
           "locationWhenInUsePermission": "EWM Workforce uses your location to confirm you're on site at clock-in."
         }
-      ]
-    ]
+      ],
+      "expo-localization"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "5fcad2de-2bb0-4653-a442-5a4b299729b6"
+      }
+    },
+    "owner": "ccampos50"
   }
 }

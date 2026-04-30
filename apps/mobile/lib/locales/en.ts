@@ -2,6 +2,7 @@ export const en = {
   brand: {
     name: "EWM",
     tagline: "People. Performance. Elevated.",
+    web: "ewm-altus.com",
   },
   login: {
     email: "Email",

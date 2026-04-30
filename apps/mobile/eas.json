@@ -1,0 +1,39 @@
+{
+  "cli": {
+    "version": ">= 12.0.0",
+    "appVersionSource": "remote"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal"
+    },
+    "preview": {
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk"
+      },
+      "env": {
+        "EXPO_PUBLIC_SUPABASE_URL": "https://pbhtuyjigpldvcztepss.supabase.co",
+        "EXPO_PUBLIC_SUPABASE_ANON_KEY": "sb_publishable_2tZ-b-cCyD2WYdfsnC9FFQ_OfeNLBDT"
+      }
+    },
+    "production": {
+      "autoIncrement": true,
+      "env": {
+        "EXPO_PUBLIC_SUPABASE_URL": "https://pbhtuyjigpldvcztepss.supabase.co",
+        "EXPO_PUBLIC_SUPABASE_ANON_KEY": "sb_publishable_2tZ-b-cCyD2WYdfsnC9FFQ_OfeNLBDT"
+      }
+    }
+  },
+  "submit": {
+    "production": {
+      "ios": {
+        "ascAppId": "6764177007",
+        "ascApiKeyPath": "/Users/Christian/Downloads/AuthKey_3RU9RQACA2.p8",
+        "ascApiKeyId": "3RU9RQACA2",
+        "ascApiKeyIssuerId": "c6e01eb2-3a55-4186-ac65-0d01429a7f18"
+      }
+    }
+  }
+}

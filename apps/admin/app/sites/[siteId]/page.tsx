@@ -1,6 +1,11 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { fetchShiftTasks, fetchSite, fetchTodaysShiftsForSite } from "@/lib/db";
+import {
+  fetchShiftTasks,
+  fetchSite,
+  fetchTodaysShiftsForSite,
+  fetchLiveActivityForSite,
+} from "@/lib/db";
 import { signOut } from "../../login/actions";
 
 const STATUS_COLORS: Record<string, string> = {
@@ -27,10 +32,14 @@ export default async function SiteDetailPage({
   const site = await fetchSite(siteId);
   if (!site) notFound();
 
-  const shifts = await fetchTodaysShiftsForSite(siteId);
+  const [shifts, liveNow] = await Promise.all([
+    fetchTodaysShiftsForSite(siteId),
+    fetchLiveActivityForSite(siteId),
+  ]);
   const tasksByShift = await Promise.all(
     shifts.map(async (s) => ({ shift: s, tasks: await fetchShiftTasks(s.id) })),
   );
+  const now = Date.now();
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -46,6 +55,9 @@ export default async function SiteDetailPage({
               </Link>
               <Link href="/sites" className="hover:text-slate-900">
                 Sites
+              </Link>
+              <Link href="/workers" className="hover:text-slate-900">
+                Workers
               </Link>
             </nav>
           </div>
@@ -76,7 +88,13 @@ export default async function SiteDetailPage({
             </p>
             {site.address && <p className="mt-1 text-sm text-slate-500">{site.address}</p>}
           </div>
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2">
+            <Link
+              href={`/sites/${site.id}/edit`}
+              className="rounded-md border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+            >
+              Edit site
+            </Link>
             <Link
               href={`/sites/${site.id}/qr`}
               className="rounded-md border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
@@ -90,6 +108,12 @@ export default async function SiteDetailPage({
               Live board
             </Link>
             <Link
+              href={`/workers/new?site=${site.id}`}
+              className="rounded-md border border-[#1E3A8A] px-4 py-2 text-sm font-medium text-[#1E3A8A] hover:bg-[#1E3A8A]/5"
+            >
+              + Add worker
+            </Link>
+            <Link
               href={`/sites/${site.id}/new-shift`}
               className="rounded-md bg-[#1E3A8A] px-4 py-2 text-sm font-medium text-white hover:bg-[#1E3A8A]/90"
             >
@@ -97,6 +121,62 @@ export default async function SiteDetailPage({
             </Link>
           </div>
         </div>
+
+        <section className="mt-10">
+          <div className="mb-3 flex items-baseline justify-between">
+            <h2 className="text-lg font-semibold text-slate-900">Now</h2>
+            <span className="text-xs text-slate-500">{liveNow.length} clocked in · refresh page to update</span>
+          </div>
+          {liveNow.length === 0 ? (
+            <div className="rounded-lg border border-dashed border-slate-300 bg-white p-6 text-center text-sm text-slate-500">
+              No workers are clocked in right now.
+            </div>
+          ) : (
+            <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
+              {liveNow.map((row) => {
+                const onShiftMin = row.shift_started_at
+                  ? Math.floor((now - new Date(row.shift_started_at).getTime()) / 60000)
+                  : null;
+                const onTaskMin = row.task_started_at
+                  ? Math.floor((now - new Date(row.task_started_at).getTime()) / 60000)
+                  : null;
+                return (
+                  <Link
+                    key={row.shift_id}
+                    href={`/workers/${row.worker_id}`}
+                    className="rounded-lg border border-slate-200 bg-white p-4 hover:border-[#0EA5E9] hover:shadow-sm"
+                  >
+                    <div className="flex items-baseline justify-between">
+                      <div className="font-medium text-slate-900">{row.worker_name}</div>
+                      {onShiftMin != null && (
+                        <span className="text-xs text-slate-500">
+                          {Math.floor(onShiftMin / 60)}h {onShiftMin % 60}m on shift
+                        </span>
+                      )}
+                    </div>
+                    {row.task_label ? (
+                      <div className="mt-2">
+                        <div className="text-sm text-slate-700">{row.task_label}</div>
+                        <div className="mt-1 flex items-center gap-2">
+                          {row.task_target_ref && (
+                            <span className="rounded bg-[#0EA5E9]/10 px-2 py-0.5 text-xs font-medium text-[#0369A1]">
+                              Room {row.task_target_ref}
+                            </span>
+                          )}
+                          {onTaskMin != null && (
+                            <span className="text-xs text-slate-500">{onTaskMin}m on task</span>
+                          )}
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="mt-2 text-xs italic text-slate-500">No task started yet</div>
+                    )}
+                  </Link>
+                );
+              })}
+            </div>
+          )}
+        </section>
 
         <section className="mt-10">
           <h2 className="text-lg font-semibold text-slate-900">Today's shifts</h2>
@@ -188,6 +268,33 @@ export default async function SiteDetailPage({
           <h2 className="text-lg font-semibold text-slate-900">Site info</h2>
           <div className="mt-4 rounded-lg border border-slate-200 bg-white p-6 text-sm">
             <dl className="grid gap-3 sm:grid-cols-2">
+              <div>
+                <dt className="text-xs uppercase tracking-wider text-slate-500">Geo-fence</dt>
+                <dd className="mt-1 text-slate-900">
+                  {site.latitude != null && site.longitude != null ? (
+                    <>
+                      <span className="font-mono">
+                        {site.latitude.toFixed(4)}, {site.longitude.toFixed(4)}
+                      </span>{" "}
+                      · radius <b>{site.geofence_radius_m}m</b>{" "}
+                      <a
+                        href={`https://www.google.com/maps?q=${site.latitude},${site.longitude}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-[#0EA5E9] hover:underline"
+                      >
+                        (map ↗)
+                      </a>
+                    </>
+                  ) : (
+                    <span className="text-slate-500">Not set — workers can't clock in until set.</span>
+                  )}
+                </dd>
+              </div>
+              <div>
+                <dt className="text-xs uppercase tracking-wider text-slate-500">Timezone</dt>
+                <dd className="mt-1 font-mono text-slate-900">{site.timezone}</dd>
+              </div>
               <div>
                 <dt className="text-xs uppercase tracking-wider text-slate-500">Site QR code</dt>
                 <dd className="mt-1 font-mono text-slate-900">{site.site_qr_code}</dd>

@@ -46,6 +46,7 @@ export function LoginScreen() {
       <View style={styles.card}>
         <Text style={styles.brand}>{t("brand.name")}</Text>
         <Text style={styles.tagline}>{t("brand.tagline")}</Text>
+        <Text style={styles.web}>{t("brand.web")}</Text>
 
         <View style={styles.field}>
           <Text style={styles.label}>{t("login.email")}</Text>
@@ -125,6 +126,12 @@ const styles = StyleSheet.create({
     color: "#64748B",
     textAlign: "center",
     marginTop: 4,
+  },
+  web: {
+    fontSize: 11,
+    color: "#94A3B8",
+    textAlign: "center",
+    marginTop: 2,
     marginBottom: 24,
   },
   field: { marginBottom: 16 },
