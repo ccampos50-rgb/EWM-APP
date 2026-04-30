@@ -151,7 +151,7 @@ export function TaskDetailScreen({ route, navigation }: Props) {
   if (loading) {
     return (
       <SafeAreaView style={[styles.root, styles.center]}>
-        <ActivityIndicator color="#1E3A8A" />
+        <ActivityIndicator color="#1B3A4C" />
       </SafeAreaView>
     );
   }
@@ -264,7 +264,7 @@ const styles = StyleSheet.create({
   center: { alignItems: "center", justifyContent: "center" },
   content: { padding: 20 },
   label: { fontSize: 22, fontWeight: "700", color: "#0F172A" },
-  target: { fontSize: 15, color: "#0EA5E9", marginTop: 8 },
+  target: { fontSize: 15, color: "#3D7A9A", marginTop: 8 },
   meta: { fontSize: 13, color: "#64748B", marginTop: 4, textTransform: "capitalize" },
   notesBlock: { marginTop: 24 },
   notesLabel: { fontSize: 13, fontWeight: "500", color: "#334155", marginBottom: 6 },
@@ -281,7 +281,7 @@ const styles = StyleSheet.create({
   },
   primary: {
     marginTop: 24,
-    backgroundColor: "#1E3A8A",
+    backgroundColor: "#1B3A4C",
     paddingVertical: 14,
     borderRadius: 8,
     alignItems: "center",

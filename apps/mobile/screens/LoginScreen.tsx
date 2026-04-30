@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   ActivityIndicator,
+  Image,
   KeyboardAvoidingView,
   Platform,
   StyleSheet,
@@ -12,6 +13,7 @@ import {
 } from "react-native";
 import { useAuth } from "../lib/auth";
 import { i18n } from "../lib/i18n";
+import { colors } from "../lib/theme";
 
 export function LoginScreen() {
   const { t } = useTranslation();
@@ -43,11 +45,17 @@ export function LoginScreen() {
       style={styles.root}
       behavior={Platform.OS === "ios" ? "padding" : undefined}
     >
-      <View style={styles.card}>
+      <View style={styles.hero}>
+        <Image
+          source={require("../assets/icon.png")}
+          style={styles.logo}
+          resizeMode="contain"
+        />
         <Text style={styles.brand}>{t("brand.name")}</Text>
         <Text style={styles.tagline}>{t("brand.tagline")}</Text>
-        <Text style={styles.web}>{t("brand.web")}</Text>
+      </View>
 
+      <View style={styles.card}>
         <View style={styles.field}>
           <Text style={styles.label}>{t("login.email")}</Text>
           <TextInput
@@ -58,7 +66,7 @@ export function LoginScreen() {
             keyboardType="email-address"
             style={styles.input}
             placeholder={t("login.emailPlaceholder")}
-            placeholderTextColor="#94A3B8"
+            placeholderTextColor={colors.textSubtle}
           />
         </View>
 
@@ -70,7 +78,7 @@ export function LoginScreen() {
             secureTextEntry
             style={styles.input}
             placeholder={t("login.passwordPlaceholder")}
-            placeholderTextColor="#94A3B8"
+            placeholderTextColor={colors.textSubtle}
           />
         </View>
 
@@ -93,6 +101,8 @@ export function LoginScreen() {
             {i18n.language === "en" ? "Español" : "English"}
           </Text>
         </TouchableOpacity>
+
+        <Text style={styles.web}>{t("brand.web")}</Text>
       </View>
     </KeyboardAvoidingView>
   );
@@ -101,38 +111,50 @@ export function LoginScreen() {
 const styles = StyleSheet.create({
   root: {
     flex: 1,
-    backgroundColor: "#F8FAFC",
+    backgroundColor: colors.navyDeep,
     justifyContent: "center",
     padding: 24,
   },
-  card: {
-    backgroundColor: "#fff",
-    padding: 28,
-    borderRadius: 12,
-    shadowColor: "#0F172A",
-    shadowOpacity: 0.05,
-    shadowRadius: 12,
-    shadowOffset: { width: 0, height: 2 },
-    elevation: 2,
+  hero: {
+    alignItems: "center",
+    marginBottom: 24,
+  },
+  logo: {
+    width: 96,
+    height: 96,
+    borderRadius: 22,
+    marginBottom: 16,
   },
   brand: {
-    fontSize: 28,
+    fontSize: 30,
     fontWeight: "700",
-    color: "#1E3A8A",
+    color: "#FFFFFF",
+    letterSpacing: 2,
     textAlign: "center",
   },
   tagline: {
     fontSize: 12,
-    color: "#64748B",
+    color: colors.chevron,
     textAlign: "center",
-    marginTop: 4,
+    marginTop: 6,
+    letterSpacing: 1.5,
+    textTransform: "uppercase",
+  },
+  card: {
+    backgroundColor: colors.card,
+    padding: 28,
+    borderRadius: 16,
+    shadowColor: "#000",
+    shadowOpacity: 0.18,
+    shadowRadius: 18,
+    shadowOffset: { width: 0, height: 6 },
+    elevation: 4,
   },
   web: {
     fontSize: 11,
-    color: "#94A3B8",
+    color: colors.textSubtle,
     textAlign: "center",
-    marginTop: 2,
-    marginBottom: 24,
+    marginTop: 16,
   },
   field: { marginBottom: 16 },
   label: {
@@ -143,25 +165,25 @@ const styles = StyleSheet.create({
   },
   input: {
     borderWidth: 1,
-    borderColor: "#CBD5E1",
-    borderRadius: 6,
+    borderColor: colors.borderInput,
+    borderRadius: 8,
     paddingHorizontal: 12,
-    paddingVertical: 10,
+    paddingVertical: 12,
     fontSize: 14,
-    color: "#0F172A",
+    color: colors.text,
   },
   error: {
-    color: "#DC2626",
-    backgroundColor: "#FEF2F2",
+    color: colors.error,
+    backgroundColor: colors.errorBg,
     padding: 10,
     borderRadius: 6,
     fontSize: 13,
     marginBottom: 12,
   },
   button: {
-    backgroundColor: "#1E3A8A",
-    paddingVertical: 12,
-    borderRadius: 6,
+    backgroundColor: colors.navy,
+    paddingVertical: 14,
+    borderRadius: 8,
     alignItems: "center",
     marginTop: 8,
   },
@@ -169,14 +191,15 @@ const styles = StyleSheet.create({
   buttonText: {
     color: "#fff",
     fontSize: 15,
-    fontWeight: "500",
+    fontWeight: "600",
+    letterSpacing: 0.5,
   },
   langToggle: {
     marginTop: 16,
     alignItems: "center",
   },
   langToggleText: {
-    color: "#0EA5E9",
+    color: colors.accent,
     fontSize: 13,
     fontWeight: "500",
   },

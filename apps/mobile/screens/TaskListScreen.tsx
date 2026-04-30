@@ -18,7 +18,7 @@ type Props = NativeStackScreenProps<RootStackParamList, "TaskList">;
 
 const STATUS_COLORS: Record<TaskRow["status"], string> = {
   assigned: "#64748B",
-  in_progress: "#0EA5E9",
+  in_progress: "#3D7A9A",
   done: "#16A34A",
   blocked: "#DC2626",
   skipped: "#94A3B8",
@@ -61,7 +61,7 @@ export function TaskListScreen({ route, navigation }: Props) {
 
       {loading ? (
         <View style={styles.center}>
-          <ActivityIndicator color="#1E3A8A" />
+          <ActivityIndicator color="#1B3A4C" />
         </View>
       ) : error ? (
         <View style={styles.center}>

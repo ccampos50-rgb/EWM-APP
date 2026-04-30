@@ -1,0 +1,16 @@
+export const colors = {
+  navy: "#1B3A4C",
+  navyDeep: "#0F2738",
+  navyLight: "#254E67",
+  chevron: "#7BB6D6",
+  accent: "#3D7A9A",
+  paper: "#F8FAFC",
+  card: "#FFFFFF",
+  text: "#0F172A",
+  textMuted: "#64748B",
+  textSubtle: "#94A3B8",
+  border: "#E2E8F0",
+  borderInput: "#CBD5E1",
+  error: "#DC2626",
+  errorBg: "#FEF2F2",
+} as const;

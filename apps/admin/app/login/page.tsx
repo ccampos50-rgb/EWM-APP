@@ -23,8 +23,18 @@ export default async function LoginPage({
         <div className="rounded-lg border border-white/10 bg-white/95 p-8 shadow-2xl backdrop-blur">
           <LoginForm next={next ?? "/"} />
         </div>
-        <div className="mt-6 text-center text-xs text-altus-muted">
-          ewm-altus.com
+        <div className="mt-6 flex flex-col items-center gap-3">
+          <a
+            href="https://elevated-workforce.com"
+            target="_blank"
+            rel="noopener"
+            className="rounded-full border border-white/20 bg-white/5 px-4 py-1.5 text-xs font-medium text-altus-cream/90 backdrop-blur transition hover:border-altus-accent hover:bg-white/10 hover:text-altus-accent-bright"
+          >
+            EWM &#8599;
+          </a>
+          <div className="text-[10px] uppercase tracking-[0.25em] text-altus-muted">
+            ewm-altus.com
+          </div>
         </div>
       </div>
     </div>

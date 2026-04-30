@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
     borderBottomColor: "#E2E8F0",
     backgroundColor: "#fff",
   },
-  brand: { fontSize: 20, fontWeight: "700", color: "#1E3A8A" },
+  brand: { fontSize: 20, fontWeight: "700", color: "#1B3A4C" },
   signOut: { fontSize: 14, color: "#475569" },
   body: { flex: 1, padding: 24 },
   heading: { fontSize: 24, fontWeight: "600", color: "#0F172A" },

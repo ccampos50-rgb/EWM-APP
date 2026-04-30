@@ -122,13 +122,13 @@ const styles = StyleSheet.create({
     backgroundColor: "#CBD5E1",
   },
   dotActive: {
-    backgroundColor: "#1E3A8A",
+    backgroundColor: "#1B3A4C",
     width: 24,
   },
   button: {
     marginHorizontal: 24,
     marginBottom: 32,
-    backgroundColor: "#1E3A8A",
+    backgroundColor: "#1B3A4C",
     paddingVertical: 16,
     borderRadius: 12,
     alignItems: "center",

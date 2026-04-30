@@ -98,7 +98,7 @@ export function SiteDetailScreen({ route, navigation }: Props) {
   if (loading) {
     return (
       <SafeAreaView style={[styles.root, styles.center]}>
-        <ActivityIndicator color="#1E3A8A" />
+        <ActivityIndicator color="#1B3A4C" />
       </SafeAreaView>
     );
   }
@@ -191,7 +191,7 @@ const styles = StyleSheet.create({
   siteName: { fontSize: 24, fontWeight: "700", color: "#0F172A" },
   customer: {
     fontSize: 14,
-    color: "#0EA5E9",
+    color: "#3D7A9A",
     marginTop: 6,
     textTransform: "capitalize",
   },
@@ -216,7 +216,7 @@ const styles = StyleSheet.create({
   },
   primaryButton: {
     marginTop: 24,
-    backgroundColor: "#1E3A8A",
+    backgroundColor: "#1B3A4C",
     paddingVertical: 14,
     borderRadius: 8,
     alignItems: "center",

@@ -72,7 +72,7 @@ export function ClockOutScreen({ route, navigation }: Props) {
   if (loading) {
     return (
       <SafeAreaView style={[styles.root, styles.center]}>
-        <ActivityIndicator color="#1E3A8A" />
+        <ActivityIndicator color="#1B3A4C" />
       </SafeAreaView>
     );
   }
@@ -136,7 +136,7 @@ const styles = StyleSheet.create({
   statLabel: { fontSize: 12, color: "#64748B", marginTop: 4, textTransform: "uppercase" },
   primary: {
     marginTop: 32,
-    backgroundColor: "#1E3A8A",
+    backgroundColor: "#1B3A4C",
     paddingVertical: 14,
     borderRadius: 8,
     alignItems: "center",
