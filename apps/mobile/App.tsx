@@ -1,14 +1,16 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import { useEffect, useState } from "react";
-import { ActivityIndicator, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { AuthProvider, useAuth } from "./lib/auth";
 import "./lib/i18n";
 import { colors } from "./lib/theme";
 import { registerForPushNotifications } from "./lib/push";
+import { AnimatedSplash } from "./screens/AnimatedSplash";
 import { ClockOutScreen } from "./screens/ClockOutScreen";
 import { HomeScreen } from "./screens/HomeScreen";
 import { IncidentReportScreen } from "./screens/IncidentReportScreen";
@@ -19,6 +21,8 @@ import { TaskDetailScreen } from "./screens/TaskDetailScreen";
 import { TaskListScreen } from "./screens/TaskListScreen";
 import { WalkthroughScreen, WALKTHROUGH_DONE_KEY } from "./screens/WalkthroughScreen";
 import type { RootStackParamList } from "./navigation/types";
+
+SplashScreen.preventAutoHideAsync().catch(() => {});
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -31,17 +35,19 @@ function RootNavigator() {
   }, []);
 
   useEffect(() => {
+    if (!loading && walkthroughDone !== null) {
+      SplashScreen.hideAsync().catch(() => {});
+    }
+  }, [loading, walkthroughDone]);
+
+  useEffect(() => {
     if (session) {
       registerForPushNotifications().catch((e) => console.warn("[push]", e));
     }
   }, [session]);
 
   if (loading || walkthroughDone === null) {
-    return (
-      <View style={styles.loading}>
-        <ActivityIndicator color="#101A25" />
-      </View>
-    );
+    return <View style={styles.preload} />;
   }
 
   if (!walkthroughDone) {
@@ -98,23 +104,24 @@ function RootNavigator() {
 void HomeScreen;
 
 export default function App() {
+  const [splashFinished, setSplashFinished] = useState(false);
+
   return (
     <SafeAreaProvider>
       <AuthProvider>
         <NavigationContainer>
           <RootNavigator />
         </NavigationContainer>
-        <StatusBar style="auto" />
+        {!splashFinished && <AnimatedSplash onDone={() => setSplashFinished(true)} />}
+        <StatusBar style="light" />
       </AuthProvider>
     </SafeAreaProvider>
   );
 }
 
 const styles = StyleSheet.create({
-  loading: {
+  preload: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "#F8FAFC",
+    backgroundColor: colors.navyDeep,
   },
 });

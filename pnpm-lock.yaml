@@ -90,6 +90,9 @@ importers:
       expo-location:
         specifier: ~19.0.8
         version: 19.0.8(expo@54.0.34(@babel/core@7.29.0)(react-native@0.81.5(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)(typescript@5.9.3))
+      expo-splash-screen:
+        specifier: ~31.0.13
+        version: 31.0.13(expo@54.0.34(@babel/core@7.29.0)(react-native@0.81.5(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)(typescript@5.9.3))(typescript@5.9.3)
       expo-status-bar:
         specifier: ~3.0.9
         version: 3.0.9(react-native@0.81.5(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
@@ -2020,6 +2023,11 @@ packages:
     resolution: {integrity: sha512-vb5TBtskvEdzYuW79lATXutOEBfW5m6U4EFpNjCVZTnI7S//SAsLQkYEpn+EDfn84m6VQfzSGkIVR6YPaScKFA==}
     engines: {node: '>=20.16.0'}
 
+  expo-splash-screen@31.0.13:
+    resolution: {integrity: sha512-1epJLC1cDlwwj089R2h8cxaU5uk4ONVAC+vzGiTZH4YARQhL4Stlz1MbR6yAS173GMosvkE6CAeihR7oIbCkDA==}
+    peerDependencies:
+      expo: '*'
+
   expo-status-bar@3.0.9:
     resolution: {integrity: sha512-xyYyVg6V1/SSOZWh4Ni3U129XHCnFHBTcUo0dhWtFDrZbNp/duw5AGsQfb2sVeU0gxWHXSY1+5F0jnKYC7WuOw==}
     peerDependencies:
@@ -3427,11 +3435,12 @@ packages:
 
   uuid@3.4.0:
     resolution: {integrity: sha512-HjSDRw6gZE5JMggctHBcjVak08+KEVhSIiDzFnT9S9aegmp85S/bReBVTb4QTFaRNptJ9kuYaNhnbNEOkbKb/A==}
-    deprecated: Please upgrade  to version 7 or higher.  Older versions may use Math.random() in certain circumstances, which is known to be problematic.  See https://v8.dev/blog/math-random for details.
+    deprecated: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
     hasBin: true
 
   uuid@7.0.3:
     resolution: {integrity: sha512-DPSke0pXhTZgoF/d+WSt2QaKMCFSfx7QegxEWT+JOuHF5aWrKEn0G+ztjuJg/gG8/ItK+rbPCD/yNv8yyih6Cg==}
+    deprecated: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
     hasBin: true
 
   validate-npm-package-name@5.0.1:
@@ -5758,6 +5767,14 @@ snapshots:
       react-native: 0.81.5(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0)
 
   expo-server@1.0.6: {}
+
+  expo-splash-screen@31.0.13(expo@54.0.34(@babel/core@7.29.0)(react-native@0.81.5(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)(typescript@5.9.3))(typescript@5.9.3):
+    dependencies:
+      '@expo/prebuild-config': 54.0.8(expo@54.0.34(@babel/core@7.29.0)(react-native@0.81.5(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)(typescript@5.9.3))(typescript@5.9.3)
+      expo: 54.0.34(@babel/core@7.29.0)(react-native@0.81.5(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)(typescript@5.9.3)
+    transitivePeerDependencies:
+      - supports-color
+      - typescript
 
   expo-status-bar@3.0.9(react-native@0.81.5(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0):
     dependencies:
