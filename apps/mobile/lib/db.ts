@@ -77,10 +77,14 @@ export async function fetchTodaysShift(siteId: string): Promise<ShiftRow | null>
   const endOfDay = new Date();
   endOfDay.setHours(23, 59, 59, 999);
 
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return null;
+
   const { data, error } = await supabase
     .from("shifts")
     .select("id, site_id, scheduled_start, scheduled_end, actual_start, actual_end, status")
     .eq("site_id", siteId)
+    .eq("worker_id", user.id)
     .gte("scheduled_start", startOfDay.toISOString())
     .lte("scheduled_start", endOfDay.toISOString())
     .order("scheduled_start", { ascending: true })
