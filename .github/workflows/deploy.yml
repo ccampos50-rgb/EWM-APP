@@ -34,13 +34,13 @@ jobs:
       - name: Tar artifacts
         run: |
           cd apps/admin
-          tar -czf /tmp/admin-build.tar.gz .next public
-          ls -lh /tmp/admin-build.tar.gz
+          tar -czf "$GITHUB_WORKSPACE/admin-build.tar.gz" .next public
+          ls -lh "$GITHUB_WORKSPACE/admin-build.tar.gz"
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: admin-build
-          path: /tmp/admin-build.tar.gz
+          path: admin-build.tar.gz
           retention-days: 1
 
   deploy:
@@ -52,16 +52,15 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: admin-build
-          path: /tmp/
+          # leave at workspace root so scp-action's docker container can see it
       - name: SCP build to droplet
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.DROPLET_HOST }}
           username: ${{ secrets.DROPLET_USER }}
           key: ${{ secrets.DROPLET_SSH_KEY }}
-          source: /tmp/admin-build.tar.gz
+          source: admin-build.tar.gz
           target: /tmp/
-          strip_components: 2
       - name: SSH and swap in new build
         uses: appleboy/ssh-action@v1.0.3
         with:
