@@ -1,0 +1,47 @@
+name: Droplet diagnostics
+
+on:
+  workflow_dispatch:
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - name: SSH and report sizing
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.DROPLET_HOST }}
+          username: ${{ secrets.DROPLET_USER }}
+          key: ${{ secrets.DROPLET_SSH_KEY }}
+          port: 22
+          command_timeout: 2m
+          script: |
+            echo "=== uname ==="
+            uname -a
+            echo
+            echo "=== /etc/os-release ==="
+            cat /etc/os-release | grep PRETTY_NAME
+            echo
+            echo "=== CPU ==="
+            nproc
+            cat /proc/cpuinfo | grep "model name" | head -1
+            echo
+            echo "=== memory ==="
+            free -h
+            echo
+            echo "=== swap ==="
+            swapon --show
+            echo
+            echo "=== disk ==="
+            df -h /
+            echo
+            echo "=== top processes by RSS ==="
+            ps aux --sort=-rss | head -10
+            echo
+            echo "=== pm2 status ==="
+            pm2 status || true
+            echo
+            echo "=== last OOM kills (if any) ==="
+            dmesg 2>/dev/null | grep -i "killed process\|out of memory" | tail -10 || \
+              journalctl -k --since "7 days ago" 2>/dev/null | grep -i "killed process\|out of memory" | tail -10 || \
+              echo "(no kernel log access)"
