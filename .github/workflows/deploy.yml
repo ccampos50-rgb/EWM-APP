@@ -3,32 +3,90 @@ name: Deploy admin to droplet
 on:
   push:
     branches: [main]
+    paths:
+      - 'apps/admin/**'
+      - 'packages/**'
+      - 'pnpm-lock.yaml'
+      - '.github/workflows/deploy.yml'
   workflow_dispatch:
 
+# Build on GitHub Actions (7 GB RAM free) instead of the 4 GB droplet,
+# then ship just the .next/ + public/ artifacts. Saves ~1.5 GB of memory
+# pressure on the droplet during deploys.
+
 jobs:
-  deploy:
+  build:
+    name: Build admin (CI)
     runs-on: ubuntu-latest
     steps:
-      - name: SSH and run deploy script
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Build admin
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+        run: pnpm --filter admin build
+      - name: Tar artifacts
+        run: |
+          cd apps/admin
+          tar -czf /tmp/admin-build.tar.gz .next public
+          ls -lh /tmp/admin-build.tar.gz
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: admin-build
+          path: /tmp/admin-build.tar.gz
+          retention-days: 1
+
+  deploy:
+    name: Deploy to droplet
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: admin-build
+          path: /tmp/
+      - name: SCP build to droplet
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.DROPLET_HOST }}
+          username: ${{ secrets.DROPLET_USER }}
+          key: ${{ secrets.DROPLET_SSH_KEY }}
+          source: /tmp/admin-build.tar.gz
+          target: /tmp/
+          strip_components: 2
+      - name: SSH and swap in new build
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.DROPLET_HOST }}
           username: ${{ secrets.DROPLET_USER }}
           key: ${{ secrets.DROPLET_SSH_KEY }}
           port: 22
-          command_timeout: 15m
+          command_timeout: 5m
           script: |
             set -euo pipefail
             cd /opt/ewm-app
-            echo "▶ Stashing any local changes..."
+            echo "▶ Stashing local changes..."
             git stash --include-untracked || true
-            echo "▶ Pulling latest..."
+            echo "▶ Pulling latest source..."
             git fetch origin main
             git reset --hard origin/main
-            echo "▶ Installing deps..."
+            echo "▶ Installing deps (no build, low memory)..."
             pnpm install --frozen-lockfile
-            echo "▶ Building admin..."
-            pnpm --filter admin build
+            echo "▶ Extracting CI-built artifacts..."
+            cd apps/admin
+            rm -rf .next
+            tar -xzf /tmp/admin-build.tar.gz
+            rm /tmp/admin-build.tar.gz
             echo "▶ Reloading pm2..."
             pm2 reload ewm-admin --update-env
             pm2 save
